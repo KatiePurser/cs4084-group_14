@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -19,16 +20,15 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
+        // Setting up app toolbar
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
-        // Handling the toolbar fragment, may have over complicated the toolbar situation
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.toolbar_container, new ToolbarFragment())
-                .commit();
 
         // Find buttons by ID
         add_item_button = findViewById(R.id.add_button);
@@ -40,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
         setButtonClickListener(wardrobe_button);
         setButtonClickListener(outfits_button);
     }
-
 
     private void setButtonClickListener(ImageButton button) {
         button.setOnClickListener(new View.OnClickListener() {

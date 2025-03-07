@@ -9,32 +9,24 @@
     tools:context=".MainActivity"
     android:id="@+id/main">
 
-    <FrameLayout
-        android:id="@+id/toolbar_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent" />
-
+    <include layout="@layout/toolbar"/>
 
     <ImageView
         android:id="@+id/logo_image"
         android:layout_width="250dp"
         android:layout_height="250dp"
         android:src="@drawable/ic_logo"
-        app:layout_constraintTop_toBottomOf="@id/toolbar_container"
-        app:layout_constraintStart_toStartOf="@id/toolbar_container"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
         app:layout_constraintBottom_toTopOf="@id/button_container"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="50dp"
-        />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <LinearLayout
         android:id="@+id/button_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/toolbar_container"
+        app:layout_constraintTop_toBottomOf="@id/logo_image"
         android:gravity="center"
-        android:paddingTop="100dp"
         android:orientation="horizontal">
 
         <RelativeLayout
@@ -120,6 +112,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:background="@drawable/calendar_border"
-        android:layout_marginBottom="100dp"/>
+        android:layout_marginBottom="60dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
