@@ -1,53 +1,68 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8" ?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/ic_background">
 
-
     <include layout="@layout/toolbar"/>
 
-    <ScrollView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="250dp"
+        android:id="@+id/titleLayout"
+        android:gravity="center_vertical"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
-        <LinearLayout
-            android:id="@+id/button_container"
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/logo_image"
-            android:gravity="center"
-            android:orientation="horizontal">
+            android:id="@+id/wardrobeText"
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
+            app:layout_constraintBottom_toTopOf="@id/categories"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:text="WARDROBE"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+            android:textSize="52sp"
+            android:textStyle="bold"
+            />
+    </RelativeLayout>
+
+    <HorizontalScrollView
+        android:id="@+id/categories"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/titleLayout">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
 
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="15dp"
-                android:background="@drawable/rounded_button_background">
+                android:layout_gravity="center_horizontal"
+                >
 
                 <ImageButton
-                    android:id="@+id/add_button"
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
-                    android:layout_centerHorizontal="true"
-                    android:src="@drawable/ic_hanger"
+                    android:layout_width="250dp"
+                    android:layout_height="400dp"
                     android:scaleType="fitCenter"
-                    android:background="@android:color/transparent" />
+                    android:src="@drawable/ic_outfits"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/add_button"
-                    android:layout_centerHorizontal="true"
-                    android:text="Add Item"
-                    android:textColor="@android:color/black" />
+                    android:text="Dresses"
+                    android:textAlignment="center"/>
+
             </RelativeLayout>
-
         </LinearLayout>
-    </ScrollView>
 
-
+    </HorizontalScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
