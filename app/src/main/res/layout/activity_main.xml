@@ -114,4 +114,13 @@
         android:background="@drawable/calendar_border"
         android:layout_marginBottom="60dp"/>
 
+    <ListView
+        android:id="@+id/reminderListView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@id/calendarView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
