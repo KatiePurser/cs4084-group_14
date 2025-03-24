@@ -6,6 +6,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ReminderDatabaseHandler extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "fashion_friend.db";
@@ -64,6 +67,23 @@ public class ReminderDatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         return db.rawQuery("SELECT * FROM " + TABLE_REMINDERS + " ORDER BY " + COLUMN_DATE, null);
     }
+
+    public List<String> getAllReminderDates() {
+        List<String> reminderDates = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT " + COLUMN_DATE + " FROM " + TABLE_REMINDERS + " ORDER BY " + COLUMN_DATE, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                reminderDates.add(cursor.getString(0)); // Get the date from the cursor
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return reminderDates;
+    }
+
 
     public void deleteReminder(String date) {
         SQLiteDatabase db = this.getWritableDatabase();

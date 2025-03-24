@@ -1,18 +1,12 @@
 package com.example.fashionfriend;
 
 import android.app.AlertDialog;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,21 +14,19 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import java.text.SimpleDateFormat;
+import com.applandeo.materialcalendarview.CalendarDay;
+import com.applandeo.materialcalendarview.CalendarView;
+import com.applandeo.materialcalendarview.EventDay;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
-    CalendarView calendarView;
-    TextView selectedDateText;
-    SharedPreferences sharedPreferences;
-    SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
-    String selectedDate;
-    ReminderDatabaseHandler dbHelper;
-    ListView reminderListView;
-    ArrayAdapter<String> reminderAdapter;
-    ArrayList<String> remindersList = new ArrayList<>();
-
+    private CalendarView calendarView;
+    private String selectedDate;
+    private ReminderDatabaseHandler dbHelper;
+    private List<EventDay> eventList = new ArrayList<>();
 
     private ImageButton add_item_button, wardrobe_button, outfits_button;
 
@@ -46,10 +38,6 @@ public class MainActivity extends AppCompatActivity {
 
         dbHelper = new ReminderDatabaseHandler(this);
 
-        reminderListView = findViewById(R.id.reminderListView);
-        reminderAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, remindersList);
-        reminderListView.setAdapter(reminderAdapter);
-
         // Setting up app toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -60,36 +48,41 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        // Find buttons by ID
+        // Initialising Buttons
         add_item_button = findViewById(R.id.add_button);
         wardrobe_button = findViewById(R.id.wardrobe_button);
         outfits_button = findViewById(R.id.outfits_button);
-
-        // Click listeners
         setButtonClickListener(add_item_button);
         setButtonClickListener(wardrobe_button);
         setButtonClickListener(outfits_button);
 
-
-        // Initialise Calender Components
+        // Initialising Applandeo CalendarView
         calendarView = findViewById(R.id.calendarView);
-        calendarView.setFirstDayOfWeek(2); // Setting Monday as first day of the week
 
-        sharedPreferences = getSharedPreferences("Reminders", Context.MODE_PRIVATE);
+        //Applying custom styling to current day on calender
+        Calendar today = Calendar.getInstance();
+        CalendarDay todayDay = new CalendarDay(today);
+        todayDay.setBackgroundResource(R.drawable.today_background);
+        List<CalendarDay> days = new ArrayList<>();
+        days.add(todayDay);
+        calendarView.setCalendarDays(days);
 
-        // Handle Date Selection
-        calendarView.setOnDateChangeListener((view, year, month, dayOfMonth) -> {
-            selectedDate = String.format(Locale.getDefault(), "%02d-%02d-%04d", dayOfMonth, month + 1, year);
+        loadExistingReminders(); // Load stored reminders as events
 
-            // Get the reminders for the selected date
+        // Handling Date Selection
+        calendarView.setOnDayClickListener(eventDay -> {
+            Calendar clickedDay = eventDay.getCalendar();
+            selectedDate = String.format(Locale.getDefault(), "%02d-%02d-%04d",
+                    clickedDay.get(Calendar.DAY_OF_MONTH),
+                    clickedDay.get(Calendar.MONTH) + 1,
+                    clickedDay.get(Calendar.YEAR));
+
             String reminder = dbHelper.getReminderForDate(selectedDate);
-
-            // Show Reminder Form
-            showReminderDialog(reminder);
+            showReminderDialog(reminder, clickedDay);
         });
     }
 
-    private void showReminderDialog(String existingReminder) {
+    private void showReminderDialog(String existingReminder, Calendar date) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialog_add_reminder, null);
@@ -98,7 +91,6 @@ public class MainActivity extends AppCompatActivity {
         EditText reminderTitle = dialogView.findViewById(R.id.reminderTitle);
         Button saveReminderButton = dialogView.findViewById(R.id.saveReminderButton);
 
-        // Show existing reminder if it is not null
         if (existingReminder != null) {
             reminderTitle.setText(existingReminder);
         }
@@ -110,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
             String reminderText = reminderTitle.getText().toString().trim();
             if (!reminderText.isEmpty()) {
                 dbHelper.saveReminder(selectedDate, reminderText);
+                addEventMarker(date);
                 dialog.dismiss();
                 Toast.makeText(this, "Reminder Saved!", Toast.LENGTH_SHORT).show();
             } else {
@@ -118,15 +111,22 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public String getReminderForDate(String date) {
-        return dbHelper.getReminderForDate(date);
+    private void addEventMarker(Calendar date) {
+        EventDay event = new EventDay(date, R.drawable.ic_reminder);
+        eventList.add(event);
+        calendarView.setEvents(eventList);
     }
 
-
-    private void saveReminder(String date, String reminder) {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(date, reminder);
-        editor.apply();
+    private void loadExistingReminders() {
+        List<String> datesWithReminders = dbHelper.getAllReminderDates();
+        for (String date : datesWithReminders) {
+            Calendar calendar = Calendar.getInstance();
+            String[] parts = date.split("-");
+            calendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(parts[0]));
+            calendar.set(Calendar.MONTH, Integer.parseInt(parts[1]) - 1);
+            calendar.set(Calendar.YEAR, Integer.parseInt(parts[2]));
+            addEventMarker(calendar);
+        }
     }
 
     private void setButtonClickListener(ImageButton button) {
@@ -146,5 +146,4 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
 }
