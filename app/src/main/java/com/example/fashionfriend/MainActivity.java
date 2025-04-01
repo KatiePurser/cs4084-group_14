@@ -1,6 +1,7 @@
 package com.example.fashionfriend;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -137,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
                 int id = button.getId();
 
                 if (id == R.id.add_button) {
-                    // Navigates to add item view
+                    startActivity(new Intent(MainActivity.this, AddClothingItemActivity.class));
                 } else if (id == R.id.wardrobe_button) {
                     // Navigates to wardrobe view
                 } else if (id == R.id.outfits_button) {
