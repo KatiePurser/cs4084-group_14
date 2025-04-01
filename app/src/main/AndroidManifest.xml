@@ -29,6 +29,10 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".AddClothingItemActivity"
+            android:exported="false">
+        </activity>
     </application>
 
 </manifest>

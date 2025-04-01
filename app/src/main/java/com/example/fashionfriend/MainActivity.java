@@ -6,6 +6,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -194,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
                 int id = button.getId();
                 // Handle button clicks based on their ID
                 if (id == R.id.add_button) {
-                    // Navigate to add item view (implementation pending)
+                    startActivity(new Intent(MainActivity.this, AddClothingItemActivity.class));
                 } else if (id == R.id.wardrobe_button) {
                     // Navigate to wardrobe view (implementation pending)
                 } else if (id == R.id.outfits_button) {
