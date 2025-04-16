@@ -1,6 +1,11 @@
 package com.example.fashionfriend;
 
+import android.Manifest;
 import android.app.AlertDialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +16,10 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -33,25 +42,38 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Set up splash screen during app launch
         SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
         super.onCreate(savedInstanceState);
+
+        // Request permission for notifications on Android API 33 and above
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, 101);
+            }
+        }
 
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
+        // Initialise database handler for reminders
         dbHelper = new ReminderDatabaseHandler(this);
 
-        // Setting up app toolbar
+        // Check for any reminders for today
+        checkForTodayReminder();
+
+        // Setting up the toolbar for the app
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // Apply insets for system bars like the status bar
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        // Initialising Buttons
+        // Initialising buttons and setting click listeners
         add_item_button = findViewById(R.id.add_button);
         wardrobe_button = findViewById(R.id.wardrobe_button);
         outfits_button = findViewById(R.id.outfits_button);
@@ -59,10 +81,10 @@ public class MainActivity extends AppCompatActivity {
         setButtonClickListener(wardrobe_button);
         setButtonClickListener(outfits_button);
 
-        // Initialising Applandeo CalendarView
+        // Initialise Applandeo calendar view
         calendarView = findViewById(R.id.calendarView);
 
-        //Applying custom styling to current day on calender
+        // Apply custom styling to today's date on the calendar
         Calendar today = Calendar.getInstance();
         CalendarDay todayDay = new CalendarDay(today);
         todayDay.setBackgroundResource(R.drawable.today_background);
@@ -70,9 +92,10 @@ public class MainActivity extends AppCompatActivity {
         days.add(todayDay);
         calendarView.setCalendarDays(days);
 
-        loadExistingReminders(); // Load stored reminders as events
+        // Load existing reminders from the database
+        loadExistingReminders();
 
-        // Handling Date Selection
+        // Handle date selection on the calendar
         calendarView.setOnDayClickListener(eventDay -> {
             Calendar clickedDay = eventDay.getCalendar();
             selectedDate = String.format(Locale.getDefault(), "%02d-%02d-%04d",
@@ -80,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
                     clickedDay.get(Calendar.MONTH) + 1,
                     clickedDay.get(Calendar.YEAR));
 
+            // Get the reminder for the selected date from the database and show dialog if it exists
             String reminder = dbHelper.getReminderForDate(selectedDate);
             showReminderDialog(reminder, clickedDay);
         });
@@ -95,12 +119,13 @@ public class MainActivity extends AppCompatActivity {
         Button saveReminderButton = dialogView.findViewById(R.id.saveReminderButton);
 
         if (existingReminder != null) {
-            reminderTitle.setText(existingReminder);
+            reminderTitle.setText(existingReminder); // Prepopulate text if the reminder already exists (for editing)
         }
 
         AlertDialog dialog = builder.create();
         dialog.show();
 
+        // Save the reminder when the save button is clicked
         saveReminderButton.setOnClickListener(v -> {
             String reminderText = reminderTitle.getText().toString().trim();
             if (!reminderText.isEmpty()) {
@@ -120,6 +145,7 @@ public class MainActivity extends AppCompatActivity {
         calendarView.setEvents(eventList);
     }
 
+    // Loads all existing reminders and mark them on the calendar
     private void loadExistingReminders() {
         List<String> datesWithReminders = dbHelper.getAllReminderDates();
         for (String date : datesWithReminders) {
@@ -132,21 +158,76 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void checkForTodayReminder() {
+        Calendar today = Calendar.getInstance();
+        String todayDate = String.format(Locale.getDefault(), "%02d-%02d-%04d",
+                today.get(Calendar.DAY_OF_MONTH),
+                today.get(Calendar.MONTH) + 1,
+                today.get(Calendar.YEAR));
+
+        String reminder = dbHelper.getReminderForDate(todayDate);
+        if (reminder != null) {
+            showTodayReminderNotification(reminder);
+        }
+    }
+
+    private void showTodayReminderNotification(String reminderText) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "default_channel")
+                .setSmallIcon(R.drawable.ic_notification)
+                .setContentTitle("Outfit Reminder!")
+                .setContentText(reminderText)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        // Check permission for posting notifications
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            requestNotificationPermission(); // Request permission if not already granted
+            return;
+        }
+        notificationManager.notify(1, builder.build()); // Displaying the notification
+    }
+
     private void setButtonClickListener(ImageButton button) {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 int id = button.getId();
-
+                // Handle button clicks based on their ID
                 if (id == R.id.add_button) {
-                    // Navigates to add item view
+                    // Navigate to add item view (implementation pending)
                 } else if (id == R.id.wardrobe_button) {
-                    // Navigates to wardrobe view
+                    // Navigate to wardrobe view (implementation pending)
                 } else if (id == R.id.outfits_button) {
-                    // Navigates to outfits view
+                    // Navigate to outfits view (implementation pending)
                 }
             }
         });
+    }
+
+    private void requestNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(
+                        this,
+                        new String[]{Manifest.permission.POST_NOTIFICATIONS},
+                        101 // Request code
+                );
+            }
+        }
+    }
+
+    // Create a notification channel for app notifications on Android 8.0+
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "Default Channel";
+            String description = "Used for general notifications";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel("default_channel", name, importance);
+            channel.setDescription(description);
+
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 }
