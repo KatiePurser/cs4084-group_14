@@ -27,6 +27,8 @@ import androidx.core.view.WindowInsetsCompat;
 import com.applandeo.materialcalendarview.CalendarDay;
 import com.applandeo.materialcalendarview.CalendarView;
 import com.applandeo.materialcalendarview.EventDay;
+import com.example.fashionfriend.addClothingItem.AddClothingItemActivity;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;

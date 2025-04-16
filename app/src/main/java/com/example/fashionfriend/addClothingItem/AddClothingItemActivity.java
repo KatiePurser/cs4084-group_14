@@ -1,4 +1,4 @@
-package com.example.fashionfriend;
+package com.example.fashionfriend.addClothingItem;
 
 import android.app.Activity;
 import android.content.Context;
@@ -26,8 +26,12 @@ import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
+import com.example.fashionfriend.R;
+import com.example.fashionfriend.viewAndEditClothingItem.ViewAndEditClothingItemActivity;
+import com.example.fashionfriend.data.database.ClothingItem;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -42,6 +46,7 @@ import java.util.UUID;
 
 public class AddClothingItemActivity extends AppCompatActivity {
 
+    private AddClothingItemViewModel addClothingItemViewModel;
     private ImageView imageView;
     private Uri selectedImageUri;
     private Button addItemButton;
@@ -71,7 +76,20 @@ public class AddClothingItemActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_add_clothing_item);
 
-        imageView = findViewById(R.id.imageView);
+        addClothingItemViewModel = new ViewModelProvider(this).get(AddClothingItemViewModel.class);
+        addClothingItemViewModel.getInsertClothingItemStatus().observe(this, insertClothingItemStatus -> {
+            if (insertClothingItemStatus instanceof AddClothingItemViewModel.InsertClothingItemStatus.Success) {
+                long clothingItemId = ((AddClothingItemViewModel.InsertClothingItemStatus.Success) insertClothingItemStatus).itemId;
+                navigateToViewAndEditClothingItemActivity(clothingItemId);
+            } else if (insertClothingItemStatus instanceof AddClothingItemViewModel.InsertClothingItemStatus.Error) {
+                String errorMessage = ((AddClothingItemViewModel.InsertClothingItemStatus.Error) insertClothingItemStatus).message;
+                Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
+            } else if (insertClothingItemStatus instanceof AddClothingItemViewModel.InsertClothingItemStatus.Inserting) {
+                Toast.makeText(this, "Saving clothing item...", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        imageView = findViewById(R.id.clothingItemImageView);
         imageView.setOnClickListener(v -> openImagePicker());
 
         addItemButton = findViewById(R.id.addItemButton);
@@ -139,6 +157,12 @@ public class AddClothingItemActivity extends AppCompatActivity {
         }
     }
 
+    public void navigateToViewAndEditClothingItemActivity(long clothingItemId) {
+        Intent intent = new Intent(this, ViewAndEditClothingItemActivity.class);
+        intent.putExtra("clothingItemId", clothingItemId);
+        startActivity(intent);
+    }
+
     private void saveImageToPrivateStorageAndDatabase(Uri imageUri) {
         String copiedImagePath = copyImageToPrivateStorage(this, imageUri);
         if (copiedImagePath != null) {
@@ -148,6 +172,9 @@ public class AddClothingItemActivity extends AppCompatActivity {
 
             Spinner clothingItemTypeSpinner = findViewById(R.id.clothingItemTypeSpinner);
             String itemType = clothingItemTypeSpinner.getSelectedItem().toString();
+
+            addClothingItemViewModel.insertClothingItem(new ClothingItem(itemName, itemType, copiedImagePath));
+
             Toast.makeText(this, "Image with name " + itemName + " and type " + itemType + " saved to private storage: " + copiedImagePath, Toast.LENGTH_LONG).show();
         } else {
             Log.e("ImageStorage", "Failed to copy image to private storage.");
