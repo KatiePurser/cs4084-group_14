@@ -8,39 +8,110 @@
 
     <include layout="@layout/toolbar"/>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:id="@+id/titleLayout"
-        android:gravity="center_vertical"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/wardrobeText"
-            app:layout_constraintTop_toBottomOf="@id/toolbar"
-            app:layout_constraintBottom_toTopOf="@id/categories"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:text="WARDROBE"
-            android:textColor="@color/black"
-            android:textAlignment="center"
-            android:textSize="52sp"
-            android:textStyle="bold"
-            />
-    </RelativeLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/wardrobeText"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintBottom_toTopOf="@id/categories"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="WARDROBE"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:textSize="52sp"
+        android:textStyle="bold">
+
+    </TextView>
 
     <HorizontalScrollView
         android:id="@+id/categories"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/titleLayout">
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="1dp"
+        app:layout_constraintTop_toBottomOf="@+id/wardrobeText">
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center">
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                >
+
+                <ImageButton
+                    android:id="@+id/icon"
+                    android:layout_width="300dp"
+                    android:layout_height="450dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/tops_icon"
+                    android:background="@android:color/transparent"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TOPS"
+                    android:textAlignment="center"
+                    android:textColor="#FFFFFF"
+                    android:textSize="32"
+                    android:layout_centerInParent="true"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/colorPrimary"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                >
+
+                <ImageButton
+                    android:layout_width="300dp"
+                    android:layout_height="450dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/bottoms_icon"
+                    android:background="@android:color/transparent" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="BOTTOMS"
+                    android:textAlignment="center"
+                    android:textColor="#FFFFFF"
+                    android:textSize="28"
+                    android:layout_centerInParent="true"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/colorPrimary"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                >
+
+                <ImageButton
+                    android:layout_width="300dp"
+                    android:layout_height="450dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/dresses_icon"
+                    android:background="@android:color/transparent" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="FULL BODY"
+                    android:textAlignment="center"
+                    android:textColor="#FFFFFF"
+                    android:textSize="28"
+                    android:layout_centerInParent="true"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/colorPrimary"/>
+            </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="wrap_content"
@@ -49,18 +120,48 @@
                 >
 
                 <ImageButton
-                    android:layout_width="250dp"
-                    android:layout_height="400dp"
+                    android:layout_width="300dp"
+                    android:layout_height="450dp"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/ic_outfits"/>
+                    android:src="@drawable/shoes_icon"
+                    android:background="@android:color/transparent"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="SHOES"
+                    android:textAlignment="center"
+                    android:textColor="#FFFFFF"
+                    android:textSize="28"
+                    android:layout_centerInParent="true"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/colorPrimary"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                >
+
+                <ImageButton
+                    android:layout_width="300dp"
+                    android:layout_height="450dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/accessories_icon"
+                    android:background="@android:color/transparent"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Dresses"
-                    android:textAlignment="center"/>
-
+                    android:text="ACCESSORIES"
+                    android:textAlignment="center"
+                    android:textColor="#FFFFFF"
+                    android:textSize="28"
+                    android:layout_centerInParent="true"
+                    android:background="@color/colorPrimary"/>
             </RelativeLayout>
+
         </LinearLayout>
 
     </HorizontalScrollView>
