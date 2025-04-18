@@ -199,7 +199,7 @@ public class MainActivity extends AppCompatActivity {
                 if (id == R.id.add_button) {
                     startActivity(new Intent(MainActivity.this, AddClothingItemActivity.class));
                 } else if (id == R.id.wardrobe_button) {
-                    // Navigate to wardrobe view (implementation pending)
+                    startActivity(new Intent(MainActivity.this, WardrobeActivity.class));
                 } else if (id == R.id.outfits_button) {
                     // Navigate to outfits view (implementation pending)
                 }
