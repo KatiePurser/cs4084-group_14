@@ -37,6 +37,10 @@
             android:name=".viewAndEditClothingItem.ViewAndEditClothingItemActivity"
             android:exported="false">
         </activity>
+        <activity
+            android:name=".WardrobeActivity"
+            android:exported="false">
+        </activity>
     </application>
 
 </manifest>
