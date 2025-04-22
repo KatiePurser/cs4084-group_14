@@ -58,6 +58,11 @@ public class MainActivity extends AppCompatActivity {
 
         createNotificationChannel();
 
+        // Loading Images To The Emulators Gallery on Startup
+        GalleryHelper.saveAssetImageToGallery(this, "white-dress.jpg", "white-dress");
+        GalleryHelper.saveAssetImageToGallery(this, "red-pants.jpg", "red-pants");
+        GalleryHelper.saveAssetImageToGallery(this, "coat.jpg", "coat");
+
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
@@ -235,4 +240,6 @@ public class MainActivity extends AppCompatActivity {
             notificationManager.createNotificationChannel(channel);
         }
     }
+
+
 }
