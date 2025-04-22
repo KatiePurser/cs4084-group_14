@@ -56,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+        createNotificationChannel();
+
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
