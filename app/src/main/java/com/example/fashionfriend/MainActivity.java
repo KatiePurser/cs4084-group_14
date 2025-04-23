@@ -1,5 +1,6 @@
 package com.example.fashionfriend;
 
+
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.NotificationChannel;
@@ -14,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
+
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -24,32 +26,37 @@ import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
 import com.applandeo.materialcalendarview.CalendarDay;
 import com.applandeo.materialcalendarview.CalendarView;
 import com.applandeo.materialcalendarview.EventDay;
 import com.example.fashionfriend.addClothingItem.AddClothingItemActivity;
+import com.example.fashionfriend.data.database.FashionFriendDatabase;
+import com.example.fashionfriend.data.database.ReminderDao;
+import com.example.fashionfriend.data.database.Reminder;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.Executors;
+
 import androidx.core.splashscreen.SplashScreen;
 
 public class MainActivity extends AppCompatActivity {
+
     private CalendarView calendarView;
     private String selectedDate;
-    private ReminderDatabaseHandler dbHelper;
+    private ReminderDao reminderDao;
     private List<EventDay> eventList = new ArrayList<>();
 
     private ImageButton add_item_button, wardrobe_button, outfits_button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // Set up splash screen during app launch
         SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
         super.onCreate(savedInstanceState);
 
-        // Request permission for notifications on Android API 33 and above
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, 101);
@@ -58,7 +65,6 @@ public class MainActivity extends AppCompatActivity {
 
         createNotificationChannel();
 
-        // Loading Images To The Emulators Gallery on Startup
         GalleryHelper.saveAssetImageToGallery(this, "white-dress.jpg", "white-dress");
         GalleryHelper.saveAssetImageToGallery(this, "red-pants.jpg", "red-pants");
         GalleryHelper.saveAssetImageToGallery(this, "coat.jpg", "coat");
@@ -66,24 +72,20 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
-        // Initialise database handler for reminders
-        dbHelper = new ReminderDatabaseHandler(this);
+        // Initialize Room DAO
+        reminderDao = FashionFriendDatabase.getDatabase(this).reminderDao();
 
-        // Check for any reminders for today
         checkForTodayReminder();
 
-        // Setting up the toolbar for the app
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // Apply insets for system bars like the status bar
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        // Initialising buttons and setting click listeners
         add_item_button = findViewById(R.id.add_button);
         wardrobe_button = findViewById(R.id.wardrobe_button);
         outfits_button = findViewById(R.id.outfits_button);
@@ -91,10 +93,8 @@ public class MainActivity extends AppCompatActivity {
         setButtonClickListener(wardrobe_button);
         setButtonClickListener(outfits_button);
 
-        // Initialise Applandeo calendar view
         calendarView = findViewById(R.id.calendarView);
 
-        // Apply custom styling to today's date on the calendar
         Calendar today = Calendar.getInstance();
         CalendarDay todayDay = new CalendarDay(today);
         todayDay.setBackgroundResource(R.drawable.today_background);
@@ -102,10 +102,8 @@ public class MainActivity extends AppCompatActivity {
         days.add(todayDay);
         calendarView.setCalendarDays(days);
 
-        // Load existing reminders from the database
         loadExistingReminders();
 
-        // Handle date selection on the calendar
         calendarView.setOnDayClickListener(eventDay -> {
             Calendar clickedDay = eventDay.getCalendar();
             selectedDate = String.format(Locale.getDefault(), "%02d-%02d-%04d",
@@ -113,9 +111,10 @@ public class MainActivity extends AppCompatActivity {
                     clickedDay.get(Calendar.MONTH) + 1,
                     clickedDay.get(Calendar.YEAR));
 
-            // Get the reminder for the selected date from the database and show dialog if it exists
-            String reminder = dbHelper.getReminderForDate(selectedDate);
-            showReminderDialog(reminder, clickedDay);
+            Executors.newSingleThreadExecutor().execute(() -> {
+                String reminder = reminderDao.getReminderByDate(selectedDate);
+                runOnUiThread(() -> showReminderDialog(reminder, clickedDay));
+            });
         });
     }
 
@@ -129,20 +128,23 @@ public class MainActivity extends AppCompatActivity {
         Button saveReminderButton = dialogView.findViewById(R.id.saveReminderButton);
 
         if (existingReminder != null) {
-            reminderTitle.setText(existingReminder); // Prepopulate text if the reminder already exists (for editing)
+            reminderTitle.setText(existingReminder);
         }
 
         AlertDialog dialog = builder.create();
         dialog.show();
 
-        // Save the reminder when the save button is clicked
         saveReminderButton.setOnClickListener(v -> {
             String reminderText = reminderTitle.getText().toString().trim();
             if (!reminderText.isEmpty()) {
-                dbHelper.saveReminder(selectedDate, reminderText);
-                addEventMarker(date);
-                dialog.dismiss();
-                Toast.makeText(this, "Reminder Saved!", Toast.LENGTH_SHORT).show();
+                Executors.newSingleThreadExecutor().execute(() -> {
+                    reminderDao.insert(new Reminder(selectedDate, reminderText));
+                    runOnUiThread(() -> {
+                        addEventMarker(date);
+                        dialog.dismiss();
+                        Toast.makeText(this, "Reminder Saved!", Toast.LENGTH_SHORT).show();
+                    });
+                });
             } else {
                 Toast.makeText(this, "Please enter a reminder title", Toast.LENGTH_SHORT).show();
             }
@@ -155,30 +157,35 @@ public class MainActivity extends AppCompatActivity {
         calendarView.setEvents(eventList);
     }
 
-    // Loads all existing reminders and mark them on the calendar
     private void loadExistingReminders() {
-        List<String> datesWithReminders = dbHelper.getAllReminderDates();
-        for (String date : datesWithReminders) {
-            Calendar calendar = Calendar.getInstance();
-            String[] parts = date.split("-");
-            calendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(parts[0]));
-            calendar.set(Calendar.MONTH, Integer.parseInt(parts[1]) - 1);
-            calendar.set(Calendar.YEAR, Integer.parseInt(parts[2]));
-            addEventMarker(calendar);
-        }
+        Executors.newSingleThreadExecutor().execute(() -> {
+            List<String> datesWithReminders = reminderDao.getAllReminderDates();
+            runOnUiThread(() -> {
+                for (String date : datesWithReminders) {
+                    Calendar calendar = Calendar.getInstance();
+                    String[] parts = date.split("-");
+                    calendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(parts[0]));
+                    calendar.set(Calendar.MONTH, Integer.parseInt(parts[1]) - 1);
+                    calendar.set(Calendar.YEAR, Integer.parseInt(parts[2]));
+                    addEventMarker(calendar);
+                }
+            });
+        });
     }
 
     private void checkForTodayReminder() {
-        Calendar today = Calendar.getInstance();
-        String todayDate = String.format(Locale.getDefault(), "%02d-%02d-%04d",
-                today.get(Calendar.DAY_OF_MONTH),
-                today.get(Calendar.MONTH) + 1,
-                today.get(Calendar.YEAR));
+        Executors.newSingleThreadExecutor().execute(() -> {
+            Calendar today = Calendar.getInstance();
+            String todayDate = String.format(Locale.getDefault(), "%02d-%02d-%04d",
+                    today.get(Calendar.DAY_OF_MONTH),
+                    today.get(Calendar.MONTH) + 1,
+                    today.get(Calendar.YEAR));
 
-        String reminder = dbHelper.getReminderForDate(todayDate);
-        if (reminder != null) {
-            showTodayReminderNotification(reminder);
-        }
+            String reminder = reminderDao.getReminderByDate(todayDate);
+            if (reminder != null) {
+                runOnUiThread(() -> showTodayReminderNotification(reminder));
+            }
+        });
     }
 
     private void showTodayReminderNotification(String reminderText) {
@@ -189,27 +196,22 @@ public class MainActivity extends AppCompatActivity {
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        // Check permission for posting notifications
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-            requestNotificationPermission(); // Request permission if not already granted
+            requestNotificationPermission();
             return;
         }
-        notificationManager.notify(1, builder.build()); // Displaying the notification
+        notificationManager.notify(1, builder.build());
     }
 
     private void setButtonClickListener(ImageButton button) {
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int id = button.getId();
-                // Handle button clicks based on their ID
-                if (id == R.id.add_button) {
-                    startActivity(new Intent(MainActivity.this, AddClothingItemActivity.class));
-                } else if (id == R.id.wardrobe_button) {
-                    // Navigate to wardrobe view (implementation pending)
-                } else if (id == R.id.outfits_button) {
-                    // Navigate to outfits view (implementation pending)
-                }
+        button.setOnClickListener(v -> {
+            int id = button.getId();
+            if (id == R.id.add_button) {
+                startActivity(new Intent(MainActivity.this, AddClothingItemActivity.class));
+            } else if (id == R.id.wardrobe_button) {
+                // Navigate to wardrobe view
+            } else if (id == R.id.outfits_button) {
+                // Navigate to outfits view
             }
         });
     }
@@ -221,13 +223,12 @@ public class MainActivity extends AppCompatActivity {
                 ActivityCompat.requestPermissions(
                         this,
                         new String[]{Manifest.permission.POST_NOTIFICATIONS},
-                        101 // Request code
+                        101
                 );
             }
         }
     }
 
-    // Create a notification channel for app notifications on Android 8.0+
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = "Default Channel";
@@ -240,6 +241,4 @@ public class MainActivity extends AppCompatActivity {
             notificationManager.createNotificationChannel(channel);
         }
     }
-
-
 }
