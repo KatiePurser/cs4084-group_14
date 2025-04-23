@@ -6,6 +6,8 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
+import com.example.fashionfriend.data.database.migrations.Migration1To2;
+
 @Database(entities = {ClothingItem.class, Outfit.class}, version = 2)
 public abstract class FashionFriendDatabase extends RoomDatabase {
 
@@ -19,6 +21,7 @@ public abstract class FashionFriendDatabase extends RoomDatabase {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                                     FashionFriendDatabase.class, "fashion_friend_database")
+                            .addMigrations(new Migration1To2())
                             .build();
                 }
             }
