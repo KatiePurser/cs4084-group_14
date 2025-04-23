@@ -202,6 +202,10 @@ public class MainActivity extends AppCompatActivity {
                     // Navigate to wardrobe view (implementation pending)
                 } else if (id == R.id.outfits_button) {
                     // Navigate to outfits view (implementation pending)
+                      // Navigates to outfits view
+                      Intent intent = new Intent(MainActivity.this, CreateOutfitActivity.class); //  CreateOutfitActivity is where you want to go
+                      startActivity(intent);
+                      Toast.makeText(MainActivity.this, "Outfits Clicked", Toast.LENGTH_SHORT).show();
                 }
             }
         });

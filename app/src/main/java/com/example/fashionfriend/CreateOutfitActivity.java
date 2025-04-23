@@ -238,7 +238,7 @@ public class CreateOutfitActivity extends AppCompatActivity implements CategoryA
                 List<ClothingItem> items = db.clothingItemDao().getAllClothingItems();
                 Log.d(TAG, "Retrieved " + items.size() + " clothing items from database");
                 
-                // Organize by category
+                // Organise by category
                 HashMap<String, HashMap<String, Integer>> categoryItems = new HashMap<>();
                 HashMap<String, HashMap<String, String>> categoryItemPaths = new HashMap<>();
                 
