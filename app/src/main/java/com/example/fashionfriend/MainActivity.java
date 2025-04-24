@@ -204,14 +204,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setButtonClickListener(ImageButton button) {
-        button.setOnClickListener(v -> {
-            int id = button.getId();
-            if (id == R.id.add_button) {
-                startActivity(new Intent(MainActivity.this, AddClothingItemActivity.class));
-            } else if (id == R.id.wardrobe_button) {
-                // Navigate to wardrobe view
-            } else if (id == R.id.outfits_button) {
-                // Navigate to outfits view
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int id = button.getId();
+                // Handle button clicks based on their ID
+                if (id == R.id.add_button) {
+                    startActivity(new Intent(MainActivity.this, AddClothingItemActivity.class));
+                } else if (id == R.id.wardrobe_button) {
+                    // Navigate to wardrobe view (implementation pending)
+                } else if (id == R.id.outfits_button) {
+                    // Navigate to outfits view (implementation pending)
+                      // Navigates to outfits view
+                      Intent intent = new Intent(MainActivity.this, CreateOutfitActivity.class); //  CreateOutfitActivity is where you want to go
+                      startActivity(intent);
+                      Toast.makeText(MainActivity.this, "Outfits Clicked", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
