@@ -3,11 +3,12 @@ package com.example.fashionfriend.home;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.util.Log;
-
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -31,6 +32,8 @@ public class GalleryHelper {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        copyImagesFromAssetsToInternalStorage(context);
     }
 
     private static boolean imageExistsInGallery(Context context, String displayName) {
@@ -80,6 +83,33 @@ public class GalleryHelper {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    private static void copyImagesFromAssetsToInternalStorage(Context context) {
+        String[] imageNames;
+        AssetManager assetManager = context.getAssets();
+        try {
+            imageNames = assetManager.list("images");
+            if (imageNames != null) {
+                for (String name : imageNames) {
+                    InputStream in = assetManager.open("images/" + name);
+                    File outFile = new File(context.getFilesDir(), name);
+                    OutputStream out = new FileOutputStream(outFile);
+
+                    byte[] buffer = new byte[1024];
+                    int read;
+                    while ((read = in.read(buffer)) != -1) {
+                        out.write(buffer, 0, read);
+                    }
+
+                    in.close();
+                    out.flush();
+                    out.close();
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

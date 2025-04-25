@@ -19,7 +19,7 @@ public abstract class FashionFriendDatabase extends RoomDatabase {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                                     FashionFriendDatabase.class, "fashion_friend_database")
-                            //.fallbackToDestructiveMigration()
+                            .fallbackToDestructiveMigration()
                             .createFromAsset("fashion_friend_database.db")
                             .build();
                 }
