@@ -1,4 +1,4 @@
-package com.example.fashionfriend;
+package com.example.fashionfriend.outfitCreation;
 
 import android.content.ComponentName;
 import android.content.Intent;
@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.fashionfriend.R;
 import com.example.fashionfriend.data.database.ClothingItem;
 import com.example.fashionfriend.data.database.FashionFriendDatabase;
 import com.google.gson.Gson;

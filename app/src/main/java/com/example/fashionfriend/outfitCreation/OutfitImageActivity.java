@@ -1,4 +1,4 @@
-package com.example.fashionfriend;
+package com.example.fashionfriend.outfitCreation;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -18,6 +18,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.fashionfriend.R;
 import com.example.fashionfriend.data.database.ClothingItem;
 import com.example.fashionfriend.data.database.FashionFriendDatabase;
 import com.example.fashionfriend.data.database.Outfit;

@@ -1,4 +1,4 @@
-package com.example.fashionfriend;
+package com.example.fashionfriend.outfitCreation;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.fashionfriend.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
