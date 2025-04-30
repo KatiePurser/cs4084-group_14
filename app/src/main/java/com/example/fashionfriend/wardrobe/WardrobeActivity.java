@@ -9,9 +9,11 @@ import android.widget.ImageButton;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.fashionfriend.BaseActivity;
 import com.example.fashionfriend.R;
+import com.example.fashionfriend.home.MainActivity;
 
-public class WardrobeActivity extends AppCompatActivity {
+public class WardrobeActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -33,6 +35,15 @@ public class WardrobeActivity extends AppCompatActivity {
 
         ImageButton accessories_button = findViewById(R.id.accessories_button);
         setButtonClickListener(accessories_button);
+
+        setupToolbar();
+        configureBackButton(true, () -> {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intent);
+        });
+
+        applySystemBarInsets(R.id.create_outfit);
     }
 
     private void setButtonClickListener(ImageButton button) {
