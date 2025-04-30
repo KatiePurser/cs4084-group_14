@@ -70,7 +70,7 @@
                 android:background="@drawable/ic_hanger"
                 android:focusable="true"
                 android:clickable="false"
-                android:scaleType="fitXY"
+                android:scaleType="fitCenter"
                 android:contentDescription="Outfit Image" />
         </androidx.cardview.widget.CardView>
 
@@ -166,6 +166,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@id/items_title"
                     app:layout_constraintBottom_toBottomOf="@id/items_title" />
+
 
                 <View
                     android:id="@+id/divider"
