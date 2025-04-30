@@ -18,10 +18,12 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.fashionfriend.BaseActivity;
 import com.example.fashionfriend.R;
 import com.example.fashionfriend.data.database.ClothingItem;
 import com.example.fashionfriend.data.database.FashionFriendDatabase;
 import com.example.fashionfriend.data.database.Outfit;
+import com.example.fashionfriend.home.MainActivity;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -36,7 +38,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.Executors;
 
-public class OutfitImageActivity extends AppCompatActivity {
+public class OutfitImageActivity extends BaseActivity {
 
     private static final String TAG = "OutfitImageActivity";
 
@@ -76,6 +78,15 @@ public class OutfitImageActivity extends AppCompatActivity {
 protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_outfit_image);
+
+    setupToolbar();
+    configureBackButton(true, () -> {
+        Intent intent = new Intent(this, CreateOutfitActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        startActivity(intent);
+    });
+
+    applySystemBarInsets(R.id.outfit_image);
 
     // Get outfit data from intent
     itemsJson = getIntent().getStringExtra("OUTFIT_ITEMS_JSON");

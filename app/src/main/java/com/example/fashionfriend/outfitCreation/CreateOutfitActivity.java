@@ -13,10 +13,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.fashionfriend.BaseActivity;
+import com.example.fashionfriend.home.MainActivity;
 import com.example.fashionfriend.R;
 import com.example.fashionfriend.data.database.ClothingItem;
 import com.example.fashionfriend.data.database.FashionFriendDatabase;
@@ -27,7 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Executors;
 
-public class CreateOutfitActivity extends AppCompatActivity implements CategoryAdapter.OnItemSelectedListener {
+public class CreateOutfitActivity extends BaseActivity implements CategoryAdapter.OnItemSelectedListener {
 
     private static final String TAG = "CreateOutfitActivity";
     private static final int REQUEST_OUTFIT_IMAGE = 1001;
@@ -48,6 +49,15 @@ public class CreateOutfitActivity extends AppCompatActivity implements CategoryA
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_outfit);
 
+        setupToolbar();
+        configureBackButton(true, () -> {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intent);
+        });
+
+        applySystemBarInsets(R.id.create_outfit);
+
         // Initialize views
         recyclerView = findViewById(R.id.categories_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -56,12 +66,6 @@ public class CreateOutfitActivity extends AppCompatActivity implements CategoryA
         previewContainer = findViewById(R.id.preview_container);
         previewScroll = findViewById(R.id.preview_scroll);
         noItemsText = findViewById(R.id.no_items_text);
-
-        // Hide the menu icon in toolbar since we're using the cancel button
-        ImageView menuIcon = findViewById(R.id.menu_icon);
-        if (menuIcon != null) {
-            menuIcon.setVisibility(View.GONE);
-        }
 
         loadClothingData();  // Load data from database
 

@@ -2,5 +2,7 @@
 <style name="Theme.FashionFriend" parent="Theme.Material3.Light.NoActionBar">
     <item name="colorPrimary">#805CA4</item>
     <item name="colorSecondary">#2B1C49</item>
+    <item name="android:statusBarColor">#805CA4</item>
+
 </style>
 </resources>

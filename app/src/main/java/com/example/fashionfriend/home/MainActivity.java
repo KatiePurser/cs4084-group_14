@@ -15,7 +15,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
@@ -27,6 +26,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.applandeo.materialcalendarview.CalendarDay;
 import com.applandeo.materialcalendarview.CalendarView;
 import com.applandeo.materialcalendarview.EventDay;
+import com.example.fashionfriend.BaseActivity;
 import com.example.fashionfriend.R;
 import com.example.fashionfriend.addClothingItem.AddClothingItemActivity;
 import com.example.fashionfriend.data.database.FashionFriendDatabase;
@@ -42,7 +42,7 @@ import java.util.Locale;
 import java.util.concurrent.Executors;
 import androidx.core.splashscreen.SplashScreen;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     private CalendarView calendarView;
     private String selectedDate;
@@ -68,19 +68,15 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
+        setupToolbar();
+        configureBackButton(false, null); // No back button
+
         // Initialise Room DAO
         reminderDao = FashionFriendDatabase.getDatabase(this).reminderDao();
 
         checkForTodayReminder();
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+        applySystemBarInsets(R.id.main);
 
         add_item_button = findViewById(R.id.add_button);
         wardrobe_button = findViewById(R.id.wardrobe_button);
