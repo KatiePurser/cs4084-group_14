@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/ic_background"
-    tools:context=".outfitCreation.OutfitImageActivity">
+    tools:context=".outfitCreation.OutfitImageActivity"
+    android:id="@+id/outfit_image">
 
     <include 
         android:id="@+id/toolbar_layout"
