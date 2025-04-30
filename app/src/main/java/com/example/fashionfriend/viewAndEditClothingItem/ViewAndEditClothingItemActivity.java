@@ -22,13 +22,14 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
+import com.example.fashionfriend.BaseActivity;
 import com.example.fashionfriend.R;
 import com.example.fashionfriend.data.database.ClothingItem;
+import com.example.fashionfriend.home.MainActivity;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.BufferedReader;
@@ -42,7 +43,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class ViewAndEditClothingItemActivity extends AppCompatActivity {
+public class ViewAndEditClothingItemActivity extends BaseActivity {
 
     private ArrayAdapter<String> clothingItemCategorySpinnerAdapter;
     private TextView clothingItemNameTextView;
@@ -65,72 +66,20 @@ public class ViewAndEditClothingItemActivity extends AppCompatActivity {
 
     private ViewAndEditClothingItemViewModel viewAndEditClothingItemViewModel;
 
-//    @Override
-//    protected void onSaveInstanceState(Bundle outState) {
-//        super.onSaveInstanceState(outState);
-//
-//        outState.putString("clothingItemNameTextViewText", clothingItemNameTextView.getText().toString());
-//        outState.putInt("clothingItemNameTextViewVisibility", clothingItemNameTextView.getVisibility());
-//
-//        outState.putString("clothingItemNameEditTextText", clothingItemNameEditText.getText().toString());
-//        outState.putInt("clothingItemNameEditTextVisibility", clothingItemNameEditText.getVisibility());
-//
-//        outState.putString("clothingItemCategoryTextViewText", clothingItemCategoryTextView.getText().toString());
-//        outState.putInt("clothingItemCategoryTextViewVisibility", clothingItemCategoryTextView.getVisibility());
-//
-//        outState.putInt("clothingItemCategorySpinnerSelectedItemPosition", clothingItemCategorySpinner.getSelectedItemPosition());
-//        outState.putInt("clothingItemCategorySpinnerVisibility", clothingItemCategorySpinner.getVisibility());
-//
-//        outState.putInt("editItemButton", editItemButton.getVisibility());
-//        outState.putInt("saveItemButton", saveItemButton.getVisibility());
-//        outState.putInt("cancelEditButton", cancelEditButton.getVisibility());
-//
-//        outState.putBoolean("clothingItemImageViewClickable", clothingItemImageView.isClickable());
-//        outState.putBoolean("newImageSelected", newImageSelected);
-//        outState.putBoolean("cameraPermissionGranted", cameraPermissionGranted);
-//
-//        outState.putParcelable("imageUri", selectedImageUri);
-//    }
-//
-//    @Override
-//    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-//        super.onRestoreInstanceState(savedInstanceState);
-//        if (savedInstanceState != null) {
-//            clothingItemNameTextView.setText(savedInstanceState.getString("clothingItemNameTextViewText"));
-//            clothingItemNameTextView.setVisibility(savedInstanceState.getInt("clothingItemNameTextViewVisibility"));
-//
-//            clothingItemNameEditText.setText(savedInstanceState.getString("clothingItemNameEditTextText"));
-//            clothingItemNameEditText.setVisibility(savedInstanceState.getInt("clothingItemNameEditTextVisibility"));
-//
-//            clothingItemCategoryTextView.setText(savedInstanceState.getString("clothingItemCategoryTextViewText"));
-//            clothingItemCategoryTextView.setVisibility(savedInstanceState.getInt("clothingItemCategoryTextViewVisibility"));
-//
-//            int selectedItemPosition = savedInstanceState.getInt("clothingItemCategorySpinnerSelectedItemPosition");
-//            clothingItemCategorySpinner.setSelection(selectedItemPosition);
-//
-//            clothingItemCategorySpinner.setVisibility(savedInstanceState.getInt("clothingItemCategorySpinnerVisibility"));
-//
-//            editItemButton.setVisibility(savedInstanceState.getInt("editItemButton"));
-//            saveItemButton.setVisibility(savedInstanceState.getInt("saveItemButton"));
-//            cancelEditButton.setVisibility(savedInstanceState.getInt("cancelEditButton"));
-//
-//            clothingItemImageView.setClickable(savedInstanceState.getBoolean("clothingItemImageViewClickable"));
-//
-//            selectedImageUri = savedInstanceState.getParcelable("imageUri");
-//            if (selectedImageUri != null) {
-//                displayImage(selectedImageUri);
-//            }
-//
-//            newImageSelected = savedInstanceState.getBoolean("newImageSelected");
-//            cameraPermissionGranted = savedInstanceState.getBoolean("cameraPermissionGranted");
-//        }
-//    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_view_and_edit_clothing_item);
+
+        setupToolbar();
+        configureBackButton(true, () -> {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intent);
+        });
+
+        applySystemBarInsets(R.id.view_and_edit_clothing_item);
 
         clothingItemNameTextView = findViewById(R.id.clothingItemNameTextView);
         clothingItemNameEditText = findViewById(R.id.clothingItemNameEditText);
@@ -217,6 +166,12 @@ public class ViewAndEditClothingItemActivity extends AppCompatActivity {
             Toast.makeText(this, "Clothing item not found", Toast.LENGTH_SHORT).show();
         }
 
+        if (clothingItemNameEditText.getText().toString().trim().isEmpty()) {
+            clothingItemNameEditText.setError("Item name cannot be empty.");
+            clothingItemNameEditText.setText("");
+            return;
+        }
+
         if (newImageSelected && selectedImageUri != null) {
 
             String previousImagePath = clothingItem.getImagePath();
@@ -246,6 +201,7 @@ public class ViewAndEditClothingItemActivity extends AppCompatActivity {
         setClothingItemImage(clothingItem.getImagePath());
 
         clothingItemNameEditText.setText(clothingItem.getName());
+        clothingItemNameEditText.setError(null);
         clothingItemCategorySpinner.setSelection(clothingItemCategorySpinnerAdapter.getPosition(clothingItem.getCategory()));
 
         clothingItemImageView.setClickable(false);

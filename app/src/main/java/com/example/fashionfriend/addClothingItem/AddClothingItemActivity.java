@@ -21,7 +21,6 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -29,7 +28,9 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
+import com.example.fashionfriend.BaseActivity;
 import com.example.fashionfriend.R;
+import com.example.fashionfriend.home.MainActivity;
 import com.example.fashionfriend.viewAndEditClothingItem.ViewAndEditClothingItemActivity;
 import com.example.fashionfriend.data.database.ClothingItem;
 
@@ -44,7 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class AddClothingItemActivity extends AppCompatActivity {
+public class AddClothingItemActivity extends BaseActivity {
 
     private AddClothingItemViewModel addClothingItemViewModel;
     private ImageView imageView;
@@ -76,6 +77,15 @@ public class AddClothingItemActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_add_clothing_item);
 
+        setupToolbar();
+        configureBackButton(true, () -> {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intent);
+        });
+
+        applySystemBarInsets(R.id.add_clothing_item);
+
         addClothingItemViewModel = new ViewModelProvider(this).get(AddClothingItemViewModel.class);
         addClothingItemViewModel.getInsertClothingItemStatus().observe(this, insertClothingItemStatus -> {
             if (insertClothingItemStatus instanceof AddClothingItemViewModel.InsertClothingItemStatus.Success) {
@@ -99,7 +109,8 @@ public class AddClothingItemActivity extends AppCompatActivity {
             if (selectedImageUri == null) {
                 Toast.makeText(this, "Please select an image first.", Toast.LENGTH_SHORT).show();
             } else if (itemNameEditText.getText().toString().trim().isEmpty()) {
-                Toast.makeText(this, "Please enter an item name.", Toast.LENGTH_SHORT).show();
+                itemNameEditText.setError("Please enter an item name.");
+                itemNameEditText.setText("");
             }else {
                 saveImageToPrivateStorageAndDatabase(selectedImageUri);
             }
@@ -161,6 +172,7 @@ public class AddClothingItemActivity extends AppCompatActivity {
         Intent intent = new Intent(this, ViewAndEditClothingItemActivity.class);
         intent.putExtra("clothingItemId", clothingItemId);
         startActivity(intent);
+        finish();
     }
 
     private void saveImageToPrivateStorageAndDatabase(Uri imageUri) {
@@ -175,10 +187,10 @@ public class AddClothingItemActivity extends AppCompatActivity {
 
             addClothingItemViewModel.insertClothingItem(new ClothingItem(itemName, itemType, copiedImagePath));
 
-            Toast.makeText(this, "Image with name " + itemName + " and type " + itemType + " saved to private storage: " + copiedImagePath, Toast.LENGTH_LONG).show();
+//            Toast.makeText(this, "Image with name " + itemName + " and type " + itemType + " saved to private storage: " + copiedImagePath, Toast.LENGTH_LONG).show();
         } else {
             Log.e("ImageStorage", "Failed to copy image to private storage.");
-            Toast.makeText(this, "Failed to save image", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "Failed to save image", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -239,7 +251,7 @@ public class AddClothingItemActivity extends AppCompatActivity {
                     .into(imageView);
         } else {
             Glide.with(this)
-                    .load(R.drawable.ic_hanger)
+                    .load(R.drawable.ic_plus)
                     .into(imageView);
         }
     }
