@@ -45,18 +45,7 @@
             android:exported="false" />
         <activity
             android:name=".viewAndEditClothingItem.ViewAndEditClothingItemActivity"
-            android:exported="false">
-        </activity>
-
-        <activity
-            android:name=".wardrobe.WardrobeActivity"
-            android:exported="false">
-        </activity>
-
-        <activity
-            android:name=".wardrobe.WardrobeCategoryActivity"
-            android:exported="false">
-        </activity>
+            android:exported="false" />
     </application>
 
 </manifest>
