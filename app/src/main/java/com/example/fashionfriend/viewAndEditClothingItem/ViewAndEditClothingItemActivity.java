@@ -22,13 +22,14 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
+import com.example.fashionfriend.BaseActivity;
 import com.example.fashionfriend.R;
 import com.example.fashionfriend.data.database.ClothingItem;
+import com.example.fashionfriend.home.MainActivity;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.BufferedReader;
@@ -42,7 +43,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class ViewAndEditClothingItemActivity extends AppCompatActivity {
+public class ViewAndEditClothingItemActivity extends BaseActivity {
 
     private ArrayAdapter<String> clothingItemCategorySpinnerAdapter;
     private TextView clothingItemNameTextView;
@@ -70,6 +71,15 @@ public class ViewAndEditClothingItemActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_view_and_edit_clothing_item);
+
+        setupToolbar();
+        configureBackButton(true, () -> {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intent);
+        });
+
+        applySystemBarInsets(R.id.view_and_edit_clothing_item);
 
         clothingItemNameTextView = findViewById(R.id.clothingItemNameTextView);
         clothingItemNameEditText = findViewById(R.id.clothingItemNameEditText);

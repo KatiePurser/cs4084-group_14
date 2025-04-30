@@ -4,13 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    android:background="@drawable/ic_background"
+    tools:context=".addClothingItem.AddClothingItemActivity"
+    android:id="@+id/add_clothing_item">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/ic_background"
-        tools:context=".addClothingItem.AddClothingItemActivity">
+        android:layout_height="wrap_content">
+
+        <include
+            layout="@layout/toolbar"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <TextView
             android:id="@+id/textView"
@@ -19,31 +26,39 @@
             android:text="Add new item"
             android:textColor="@color/white"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-            app:layout_constraintBottom_toTopOf="@id/clothingItemImageView"
+            app:layout_constraintBottom_toTopOf="@id/clothingItemImageViewFrameLayout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.95" />
 
-        <ImageView
-            android:id="@+id/clothingItemImageView"
+        <FrameLayout
+            android:id="@+id/clothingItemImageViewFrameLayout"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="@drawable/ic_plus"
-            android:foreground="@drawable/ripple_effect"
-            android:clickable="true"
-            android:focusable="true"
-            android:scaleType="centerCrop"
+            android:background="@drawable/rounded_button_background"
+            android:padding="8dp"
             app:layout_constraintBottom_toTopOf="@id/itemNameEditText"
+            app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.35"
-            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintWidth_max="200dp"
             app:layout_constraintVertical_bias="0.9"
-            app:layout_constraintWidth_max="200dp"/>
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintWidth_percent="0.35">
+
+            <ImageView
+                android:id="@+id/clothingItemImageView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/ic_plus"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="@drawable/ripple_effect"
+                android:scaleType="centerCrop" />
+        </FrameLayout>
 
         <EditText
             android:id="@+id/itemNameEditText"

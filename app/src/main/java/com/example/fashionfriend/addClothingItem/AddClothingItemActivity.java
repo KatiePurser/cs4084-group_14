@@ -21,7 +21,6 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -29,7 +28,9 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
+import com.example.fashionfriend.BaseActivity;
 import com.example.fashionfriend.R;
+import com.example.fashionfriend.home.MainActivity;
 import com.example.fashionfriend.viewAndEditClothingItem.ViewAndEditClothingItemActivity;
 import com.example.fashionfriend.data.database.ClothingItem;
 
@@ -44,7 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class AddClothingItemActivity extends AppCompatActivity {
+public class AddClothingItemActivity extends BaseActivity {
 
     private AddClothingItemViewModel addClothingItemViewModel;
     private ImageView imageView;
@@ -75,6 +76,15 @@ public class AddClothingItemActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_add_clothing_item);
+
+        setupToolbar();
+        configureBackButton(true, () -> {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intent);
+        });
+
+        applySystemBarInsets(R.id.add_clothing_item);
 
         addClothingItemViewModel = new ViewModelProvider(this).get(AddClothingItemViewModel.class);
         addClothingItemViewModel.getInsertClothingItemStatus().observe(this, insertClothingItemStatus -> {
@@ -241,7 +251,7 @@ public class AddClothingItemActivity extends AppCompatActivity {
                     .into(imageView);
         } else {
             Glide.with(this)
-                    .load(R.drawable.ic_hanger)
+                    .load(R.drawable.ic_plus)
                     .into(imageView);
         }
     }
