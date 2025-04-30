@@ -13,10 +13,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.fashionfriend.BaseActivity;
+import com.example.fashionfriend.home.MainActivity;
 import com.example.fashionfriend.R;
 import com.example.fashionfriend.data.database.ClothingItem;
 import com.example.fashionfriend.data.database.FashionFriendDatabase;
@@ -30,7 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Executors;
 
-public class CreateOutfitActivity extends AppCompatActivity implements CategoryAdapter.OnItemSelectedListener {
+public class CreateOutfitActivity extends BaseActivity implements CategoryAdapter.OnItemSelectedListener {
 
     private static final String TAG = "CreateOutfitActivity";
     private static final int REQUEST_OUTFIT_IMAGE = 1001;
@@ -52,6 +53,15 @@ public class CreateOutfitActivity extends AppCompatActivity implements CategoryA
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_outfit);
+
+        setupToolbar();
+        configureBackButton(true, () -> {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intent);
+        });
+
+        applySystemBarInsets(R.id.create_outfit);
 
         // Initialize views
         recyclerView = findViewById(R.id.categories_recycler_view);
