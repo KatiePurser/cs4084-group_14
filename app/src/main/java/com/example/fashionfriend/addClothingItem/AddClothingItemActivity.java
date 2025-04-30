@@ -22,9 +22,6 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
@@ -140,15 +137,7 @@ public class AddClothingItemActivity extends BaseActivity {
                 });
         requestCameraPermission();
 
-
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
-
         Spinner spinner = findViewById(R.id.clothingItemTypeSpinner);
-
         if (spinner != null) {
             List<String> categories = loadCategoriesFromCSV("clothing_categories.csv");
             if (categories != null) {
@@ -282,9 +271,5 @@ public class AddClothingItemActivity extends BaseActivity {
             Log.e("AddClothingItemActivity", "Error reading CSV: " + e.getMessage());
             return null; // Indicate failure
         }
-    }
-
-    private void resetViews() {
-        itemNameEditText.setText("");
     }
 }
