@@ -58,7 +58,7 @@ public class WardrobeActivity extends BaseActivity {
                     startActivity(i);
                 } else if (id == R.id.bottoms_button) {
                     Intent i = new Intent(WardrobeActivity.this, WardrobeCategoryActivity.class);
-                    i.putExtra("type","Bottoms");
+                    i.putExtra("type","Bottom");
                     startActivity(i);
                 } else if (id == R.id.accessories_button) {
                     Intent i = new Intent(WardrobeActivity.this, WardrobeCategoryActivity.class);
