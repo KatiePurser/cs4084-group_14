@@ -18,6 +18,7 @@ import com.example.fashionfriend.R;
 import com.example.fashionfriend.data.database.ClothingItem;
 import com.example.fashionfriend.data.database.Outfit;
 import com.example.fashionfriend.viewAndEditClothingItem.ViewAndEditClothingItemActivity;
+import com.example.fashionfriend.viewAndEditOutfit.ViewAndEditOutfitActivity;
 
 import java.util.List;
 
@@ -44,15 +45,15 @@ public class WardrobeOutfitAdapter extends RecyclerView.Adapter<WardrobeOutfitAd
         Outfit outfit = outfitList.get(position);
         holder.setImage(outfit);
         holder.name.setText(outfit.getName());
-//        holder.itemView.setOnClickListener(new View.OnClickListener() {  // <--- here
-//            @Override
-//            public void onClick(View v) {
-//                Log.d(TAG, "Passing item " + outfit.getName() + "with id " + item.getId());
-//                Intent i = new Intent(context, ViewAndEditClothingItemActivity.class);
-//                i.putExtra("clothingItemId", (long) outfit.getId());
-//                context.startActivity(i);
-//            }
-//        });
+        holder.itemView.setOnClickListener(new View.OnClickListener() {  // <--- here
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "Passing item " + outfit.getName() + "with id " + outfit.getId());
+                Intent i = new Intent(context, ViewAndEditOutfitActivity.class);
+                i.putExtra("outfitId", (long) outfit.getId());
+                context.startActivity(i);
+            }
+        });
     }
 
     @Override
