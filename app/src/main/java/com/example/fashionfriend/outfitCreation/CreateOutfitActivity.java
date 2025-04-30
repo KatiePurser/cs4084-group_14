@@ -60,11 +60,7 @@ public class CreateOutfitActivity extends BaseActivity implements CategoryAdapte
         setContentView(R.layout.activity_create_outfit);
 
         setupToolbar();
-        configureBackButton(true, () -> {
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            startActivity(intent);
-        });
+        configureBackButton(true);
 
         applySystemBarInsets(R.id.create_outfit);
 
@@ -447,6 +443,20 @@ public class CreateOutfitActivity extends BaseActivity implements CategoryAdapte
         } catch (IOException e) {
             Log.e(TAG, "Error reading CSV: " + e.getMessage());
             return new ArrayList<>(); // Return empty list on failure
+        }
+    }
+
+    // Handle back button press //
+    private boolean firstLaunch = true;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (firstLaunch) {
+            firstLaunch = false;
+        } else {
+            recreate();
         }
     }
 

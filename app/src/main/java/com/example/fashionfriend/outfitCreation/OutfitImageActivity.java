@@ -83,11 +83,7 @@ protected void onCreate(Bundle savedInstanceState) {
     setContentView(R.layout.activity_outfit_image);
 
     setupToolbar();
-    configureBackButton(true, () -> {
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        startActivity(intent);
-    });
+    configureBackButton(true);
 
     applySystemBarInsets(R.id.outfit_image);
 
@@ -397,5 +393,19 @@ protected void onCreate(Bundle savedInstanceState) {
         clothingItems.put("Shoes", shoes);
 
         return clothingItems;
+    }
+
+    // Handle back button press //
+    private boolean firstLaunch = true;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (firstLaunch) {
+            firstLaunch = false;
+        } else {
+            recreate();
+        }
     }
 }

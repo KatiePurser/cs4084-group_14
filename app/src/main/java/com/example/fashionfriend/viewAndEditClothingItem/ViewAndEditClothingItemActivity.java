@@ -73,11 +73,7 @@ public class ViewAndEditClothingItemActivity extends BaseActivity {
         setContentView(R.layout.activity_view_and_edit_clothing_item);
 
         setupToolbar();
-        configureBackButton(true, () -> {
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            startActivity(intent);
-        });
+        configureBackButton(true);
 
         applySystemBarInsets(R.id.view_and_edit_clothing_item);
 
@@ -351,6 +347,20 @@ public class ViewAndEditClothingItemActivity extends BaseActivity {
         } catch (IOException e) {
             Log.e("ImageHelper", "Error copying image: " + e.getMessage());
             return null;
+        }
+    }
+
+    // Handle back button press //
+    private boolean firstLaunch = true;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (firstLaunch) {
+            firstLaunch = false;
+        } else {
+            recreate();
         }
     }
 }

@@ -71,7 +71,7 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
 
         setupToolbar();
-        configureBackButton(false, null); // No back button
+        configureBackButton(false); // No back button
 
         // Initialise Room DAO
         reminderDao = FashionFriendDatabase.getDatabase(this).reminderDao();

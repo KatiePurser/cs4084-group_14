@@ -20,6 +20,9 @@ import com.example.fashionfriend.home.MainActivity;
 import com.example.fashionfriend.outfitCreation.CreateOutfitActivity;
 import com.example.fashionfriend.wardrobe.WardrobeActivity;
 
+
+
+
 public abstract class BaseActivity extends AppCompatActivity {
 
     protected ImageButton menuButton;
@@ -71,16 +74,18 @@ public abstract class BaseActivity extends AppCompatActivity {
     /**
      * Call this in child activities to configure the back button behavior.
      */
-    protected void configureBackButton(boolean showBackButton, Runnable backAction) {
+    protected void configureBackButton(boolean showBackButton) {
         if (backButton != null) {
             if (showBackButton) {
                 backButton.setVisibility(View.VISIBLE);
-                backButton.setOnClickListener(v -> backAction.run());
+                backButton.setOnClickListener(v -> this.getOnBackPressedDispatcher().onBackPressed());
+
             } else {
                 backButton.setVisibility(View.GONE);
             }
         }
     }
+
 
     protected void applySystemBarInsets(int rootViewId) {
         View rootView = findViewById(rootViewId);
@@ -100,8 +105,28 @@ public abstract class BaseActivity extends AppCompatActivity {
         View decorView = getWindow().getDecorView();
         WindowInsetsControllerCompat controller = ViewCompat.getWindowInsetsController(decorView);
         if (controller != null) {
-            controller.setAppearanceLightStatusBars(true);     // dark icons on light background
-            controller.setAppearanceLightNavigationBars(true); // same for nav bar
+            controller.setAppearanceLightStatusBars(true);     // dark icons for status bar (on light background)
+            controller.setAppearanceLightNavigationBars(true); // dark icons for nav bar (on light background)
+        }
+
+        // Set status bar color
+        getWindow().setStatusBarColor(getColor(R.color.colorPrimary));
+
+        // Set navigation bar color
+        getWindow().setNavigationBarColor(getColor(R.color.colorPrimary));
+    }
+
+    private boolean firstLaunch = true;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (firstLaunch) {
+            firstLaunch = false; //Skipping First Run
+        } else {
+            recreate();
+            setupSystemBarAppearance();
         }
     }
 }

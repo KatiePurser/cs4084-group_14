@@ -75,11 +75,7 @@ public class AddClothingItemActivity extends BaseActivity {
         setContentView(R.layout.activity_add_clothing_item);
 
         setupToolbar();
-        configureBackButton(true, () -> {
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            startActivity(intent);
-        });
+        configureBackButton(true);
 
         applySystemBarInsets(R.id.add_clothing_item);
 
@@ -281,6 +277,20 @@ public class AddClothingItemActivity extends BaseActivity {
         } catch (IOException e) {
             Log.e("AddClothingItemActivity", "Error reading CSV: " + e.getMessage());
             return null; // Indicate failure
+        }
+    }
+
+    // Handle back button press //
+    private boolean firstLaunch = true;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (firstLaunch) {
+            firstLaunch = false;
+        } else {
+            recreate();
         }
     }
 }

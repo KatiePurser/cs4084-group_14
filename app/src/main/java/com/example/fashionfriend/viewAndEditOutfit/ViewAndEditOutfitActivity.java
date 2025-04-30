@@ -93,18 +93,7 @@ public class ViewAndEditOutfitActivity extends BaseActivity {
         setContentView(R.layout.activity_view_and_edit_outfit);
 
         setupToolbar();
-        // Configure back button with proper handling for edit mode
-        configureBackButton(true, () -> {
-            // Check if we're in edit mode first
-            if (outfitNameEditText.getVisibility() == View.VISIBLE) {
-                toggleEditMode(false); // Just cancel edit mode instead of going back
-            } else {
-                // Only navigate back if not in edit mode
-                Intent intent = new Intent(this, MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                startActivity(intent);
-            }
-        });
+        configureBackButton(true);
         // Initialize ViewModel
         viewModel = new ViewModelProvider(this).get(ViewAndEditOutfitViewModel.class);
 
@@ -643,6 +632,20 @@ public class ViewAndEditOutfitActivity extends BaseActivity {
         // Shutdown the executor service
         if (!executorService.isShutdown()) {
             executorService.shutdown();
+        }
+    }
+
+    // Handle back button press //
+    private boolean firstLaunch = true;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (firstLaunch) {
+            firstLaunch = false;
+        } else {
+            recreate();
         }
     }
 }

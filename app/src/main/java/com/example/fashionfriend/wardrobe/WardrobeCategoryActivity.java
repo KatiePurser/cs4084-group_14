@@ -58,11 +58,7 @@ public class WardrobeCategoryActivity extends BaseActivity {
         setButtonClickListener(add, category);
 
         setupToolbar();
-        configureBackButton(true, () -> {
-            Intent intent = new Intent(this, WardrobeActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            startActivity(intent);
-        });
+        configureBackButton(true);
 
         applySystemBarInsets(R.id.create_outfit);
 
@@ -80,16 +76,6 @@ public class WardrobeCategoryActivity extends BaseActivity {
             loadClothingData(category);
         }
 
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (category.equals("Outfits")) {
-            loadOutfitData();
-        } else {
-            loadClothingData(category);
-        }
     }
 
     private void setButtonClickListener(ImageButton button, String category) {
@@ -208,5 +194,19 @@ public class WardrobeCategoryActivity extends BaseActivity {
                 });
             }
         });
+    }
+
+    // Handle back button press //
+    private boolean firstLaunch = true;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (firstLaunch) {
+            firstLaunch = false;
+        } else {
+            recreate();
+        }
     }
 }
