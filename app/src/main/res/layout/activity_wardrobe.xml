@@ -57,7 +57,7 @@
                     android:layout_width="300dp"
                     android:layout_height="500dp"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/ic_wardrobe"
+                    android:src="@drawable/outfit_icon"
                     android:background="@android:color/transparent"/>
 
                 <TextView
