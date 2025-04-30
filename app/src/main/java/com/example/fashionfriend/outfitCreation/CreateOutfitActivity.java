@@ -2,6 +2,7 @@ package com.example.fashionfriend.outfitCreation;
 
 import android.content.ComponentName;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -25,6 +26,10 @@ import com.example.fashionfriend.data.database.Outfit;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -361,24 +366,32 @@ public class CreateOutfitActivity extends BaseActivity implements CategoryAdapte
         // Try to load from database in background thread
         Executors.newSingleThreadExecutor().execute(() -> {
             try {
-                // Log that we're attempting to access the database
-                Log.d(TAG, "Attempting to access database");
-
                 // Get database instance
                 FashionFriendDatabase db = FashionFriendDatabase.getDatabase(this);
-                Log.d(TAG, "Database instance obtained");
+
+                // Load categories from CSV first
+                List<String> allCategories = loadCategoriesFromCSV("clothing_categories.csv");
 
                 // Get all clothing items
                 List<ClothingItem> items = db.clothingItemDao().getAllClothingItems();
                 Log.d(TAG, "Retrieved " + items.size() + " clothing items from database");
 
                 // Organise by category
+                // Organize by category
                 HashMap<String, HashMap<String, Integer>> categoryItems = new HashMap<>();
                 HashMap<String, HashMap<String, String>> categoryItemPaths = new HashMap<>();
 
+                // Initialize all categories from CSV
+                for (String category : allCategories) {
+                    categoryItems.put(category, new HashMap<>());
+                    categoryItemPaths.put(category, new HashMap<>());
+                }
+
+                // Add items to their categories
                 for (ClothingItem item : items) {
                     String category = item.getCategory();
                     if (!categoryItems.containsKey(category)) {
+                        // This handles any custom categories not in the CSV
                         categoryItems.put(category, new HashMap<>());
                         categoryItemPaths.put(category, new HashMap<>());
                     }
@@ -389,31 +402,26 @@ public class CreateOutfitActivity extends BaseActivity implements CategoryAdapte
                     categoryItemPaths.get(category).put(item.getName(), item.getImagePath());
                 }
 
-                // If no items found, show a message instead of using default data
                 final HashMap<String, HashMap<String, Integer>> resultItems = categoryItems;
                 final HashMap<String, HashMap<String, String>> resultPaths = categoryItemPaths;
 
                 // Update UI on main thread
                 runOnUiThread(() -> {
                     clothingItems = resultItems;
-                    clothingItemPaths = resultPaths;  // Store the paths
+                    clothingItemPaths = resultPaths;
                     setupRecyclerView();
 
                     // Show message if no items found
-                    if (clothingItems.isEmpty()) {
+                    if (items.isEmpty()) {
                         Toast.makeText(CreateOutfitActivity.this,
                                 "No clothing items found. Please add some items first.",
                                 Toast.LENGTH_LONG).show();
                     }
-
-                    Log.d(TAG, "UI updated with clothing items");
                 });
             } catch (Exception e) {
                 Log.e(TAG, "Error loading clothing items from database", e);
-
-                // On error, show error message but don't use default data
                 runOnUiThread(() -> {
-                    clothingItems = new HashMap<>(); // Empty map instead of default data
+                    clothingItems = new HashMap<>();
                     setupRecyclerView();
                     Toast.makeText(CreateOutfitActivity.this,
                             "Error loading from database: " + e.getMessage(),
@@ -422,4 +430,25 @@ public class CreateOutfitActivity extends BaseActivity implements CategoryAdapte
             }
         });
     }
+
+    private List<String> loadCategoriesFromCSV(String filename) {
+        List<String> categories = new ArrayList<>();
+        AssetManager assetManager = getAssets();
+        try {
+            InputStream inputStream = assetManager.open(filename);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                categories.add(line.trim()); // Add each line (category)
+            }
+            reader.close();
+            inputStream.close();
+            return categories;
+        } catch (IOException e) {
+            Log.e(TAG, "Error reading CSV: " + e.getMessage());
+            return new ArrayList<>(); // Return empty list on failure
+        }
+    }
+
+
 }

@@ -16,9 +16,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- ScrollView to enable scrolling -->
-    <ScrollView
-        android:layout_width="0dp"
+    <!-- Main content area -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scroll_container"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:fillViewport="true"
         app:layout_constraintTop_toBottomOf="@id/toolbar_layout"
@@ -115,7 +116,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp" />
 
-            <!-- Fixed height RecyclerView -->
+            <!-- RecyclerView with fixed height issue -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/categories_recycler_view"
                 android:layout_width="0dp"
@@ -125,13 +126,12 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/select_items_title"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintWidth_percent="0.9"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="16dp" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
     <!-- Button container with improved buttons -->
     <LinearLayout

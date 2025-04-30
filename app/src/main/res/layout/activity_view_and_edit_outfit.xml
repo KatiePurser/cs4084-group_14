@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    android:background="@drawable/ic_background">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/ic_background"
         tools:context=".viewAndEditOutfit.ViewAndEditOutfitActivity">
 
         <!-- Guidelines for responsive layout -->
@@ -35,6 +36,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
+        <!-- Simple Header Text without background -->
         <TextView
             android:id="@+id/textView"
             android:layout_width="wrap_content"
@@ -42,183 +44,244 @@
             android:text="Your Outfit"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1"
             android:textColor="@android:color/white"
+            android:layout_marginTop="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbar_layout"
-            app:layout_constraintVertical_bias="0.02" />
+            app:layout_constraintTop_toBottomOf="@id/toolbar_layout"/>
 
-        <ImageView
-            android:id="@+id/outfit_image_view"
+        <!-- Outfit Image with Card Background - Smaller Size -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/image_card"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="@drawable/ic_hanger"
-            android:focusable="true"
-            android:clickable="false"
-            android:scaleType="centerCrop"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="8dp"
+            android:layout_marginTop="16dp"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="@id/guideline_end"
             app:layout_constraintStart_toStartOf="@id/guideline_start"
             app:layout_constraintTop_toBottomOf="@+id/textView"
-            app:layout_constraintWidth_percent="0.6"
-            app:layout_constraintVertical_bias="0.02" />
+            app:layout_constraintWidth_percent="0.5">
 
-        <TextView
-            android:id="@+id/outfit_name_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Outfit Name"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/outfit_image_view"
-            app:layout_constraintVertical_bias="0.02" />
+            <ImageView
+                android:id="@+id/outfit_image_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/ic_hanger"
+                android:focusable="true"
+                android:clickable="false"
+                android:scaleType="fitXY"
+                android:contentDescription="Outfit Image" />
+        </androidx.cardview.widget.CardView>
 
-        <EditText
-            android:id="@+id/outfit_name_edit_text"
+        <!-- Outfit Name Section -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/name_card"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="Enter outfit name"
-            android:inputType="text"
-            android:maxLength="50"
-            android:visibility="gone"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp"
+            android:layout_marginTop="16dp"
             app:layout_constraintEnd_toEndOf="@id/guideline_end"
             app:layout_constraintStart_toStartOf="@id/guideline_start"
-            app:layout_constraintTop_toBottomOf="@+id/outfit_image_view"
-            app:layout_constraintWidth_percent="0.7"
-            app:layout_constraintVertical_bias="0.02" />
+            app:layout_constraintTop_toBottomOf="@+id/image_card"
+            app:layout_constraintWidth_percent="0.8">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="12dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Outfit Name"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="#757575"
+                    android:layout_marginBottom="4dp"/>
+
+                <TextView
+                    android:id="@+id/outfit_name_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Outfit Name"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="#212121"/>
+
+                <EditText
+                    android:id="@+id/outfit_name_edit_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Enter outfit name"
+                    android:inputType="text"
+                    android:maxLength="50"
+                    android:visibility="gone"
+                    android:background="@null"
+                    android:padding="4dp"
+                    android:textSize="18sp"
+                    android:textColor="#212121"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
 
         <!-- Items section -->
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.cardview.widget.CardView
             android:id="@+id/items_section"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp"
+            android:layout_marginTop="24dp"
             app:layout_constraintEnd_toEndOf="@id/guideline_end"
             app:layout_constraintStart_toStartOf="@id/guideline_start"
-            app:layout_constraintTop_toBottomOf="@+id/outfit_name_text_view"
-            app:layout_constraintVertical_bias="0.04">
+            app:layout_constraintTop_toBottomOf="@+id/name_card">
 
-            <TextView
-                android:id="@+id/items_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Outfit Items"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <Button
-                android:id="@+id/edit_items_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Edit Items"
-                android:onClick="editOutfitItems"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/items_title"
-                app:layout_constraintBottom_toBottomOf="@id/items_title" />
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/preview_card"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="4dp"
-                app:layout_constraintTop_toBottomOf="@id/items_title"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintVertical_bias="0.02">
+                android:padding="16dp">
 
-                <LinearLayout
+                <TextView
+                    android:id="@+id/items_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Outfit Items"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="#212121"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/edit_items_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Edit Items"
+                    android:onClick="editOutfitItems"
+                    app:icon="@android:drawable/ic_menu_edit"
+                    app:iconGravity="textStart"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/items_title"
+                    app:layout_constraintBottom_toBottomOf="@id/items_title" />
+
+                <View
+                    android:id="@+id/divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#E0E0E0"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintTop_toBottomOf="@id/items_title"/>
+
+                <TextView
+                    android:id="@+id/no_items_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
+                    android:text="No items in this outfit"
+                    android:textAlignment="center"
+                    android:textStyle="italic"
+                    android:textColor="#888888"
+                    android:padding="32dp"
+                    app:layout_constraintTop_toBottomOf="@id/divider" />
 
-                    <TextView
-                        android:id="@+id/no_items_text"
-                        android:layout_width="match_parent"
+                <HorizontalScrollView
+                    android:id="@+id/preview_scroll"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintTop_toBottomOf="@id/divider">
+
+                    <LinearLayout
+                        android:id="@+id/preview_container"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="No items in this outfit"
-                        android:textAlignment="center"
-                        android:textStyle="italic"
-                        android:textColor="#888888"
-                        android:padding="16dp" />
-
-                    <HorizontalScrollView
-                        android:id="@+id/preview_scroll"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:visibility="gone">
-
-                        <LinearLayout
-                            android:id="@+id/preview_container"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:gravity="center" />
-                    </HorizontalScrollView>
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:padding="8dp" />
+                </HorizontalScrollView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
 
         <!-- Action buttons container -->
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.cardview.widget.CardView
             android:id="@+id/buttons_container"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="32dp"
             app:layout_constraintEnd_toEndOf="@id/guideline_end"
             app:layout_constraintStart_toStartOf="@id/guideline_start"
             app:layout_constraintTop_toBottomOf="@+id/items_section"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintVertical_bias="0.1">
+            app:layout_constraintBottom_toBottomOf="parent">
 
-            <Button
-                android:id="@+id/edit_outfit_button"
-                android:layout_width="0dp"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Edit Outfit"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintWidth_percent="0.8" />
+                android:padding="16dp">
 
-            <Button
-                android:id="@+id/save_outfit_button"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="Save"
-                android:visibility="gone"
-                app:layout_constraintEnd_toStartOf="@+id/cancel_edit_button"
-                app:layout_constraintHorizontal_chainStyle="packed"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintWidth_percent="0.4"
-                android:layout_marginEnd="8dp" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/edit_outfit_button"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Edit Outfit"
+                    app:icon="@android:drawable/ic_menu_edit"
+                    app:iconGravity="textStart"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintWidth_percent="0.9" />
 
-            <Button
-                android:id="@+id/cancel_edit_button"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="Cancel"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/save_outfit_button"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintWidth_percent="0.4"
-                android:layout_marginStart="8dp" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/save_outfit_button"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Save"
+                    app:icon="@android:drawable/ic_menu_save"
+                    app:iconGravity="textStart"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toStartOf="@+id/cancel_edit_button"
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintWidth_percent="0.45"
+                    android:layout_marginEnd="8dp" />
 
-            <Button
-                android:id="@+id/delete_outfit_button"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="Delete Outfit"
-                android:textColor="#FF0000"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                app:layout_constraintTop_toBottomOf="@+id/edit_outfit_button"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintWidth_percent="0.8"
-                app:layout_constraintVertical_bias="0.1" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/cancel_edit_button"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Cancel"
+                    app:icon="@android:drawable/ic_menu_close_clear_cancel"
+                    app:iconGravity="textStart"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/save_outfit_button"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintWidth_percent="0.45"
+                    android:layout_marginStart="8dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/delete_outfit_button"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Delete Outfit"
+                    app:icon="@android:drawable/ic_menu_delete"
+                    app:iconGravity="textStart"
+                    android:textColor="#FF0000"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    app:layout_constraintTop_toBottomOf="@+id/edit_outfit_button"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintWidth_percent="0.9"
+                    android:layout_marginTop="8dp" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-</ScrollView>
+</androidx.core.widget.NestedScrollView>
