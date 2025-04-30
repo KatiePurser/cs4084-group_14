@@ -63,7 +63,7 @@ public class ViewAndEditOutfitViewModel extends AndroidViewModel {
         });
     }
 
-    public void deleteOutfit(long outfitId) {
+    public void deleteOutfit(int outfitId) {
         executorService.execute(() -> {
             outfitDao.deleteOutfit(outfitId);
             updateOutfitStatus.postValue(new UpdateOutfitStatus.Deleted());

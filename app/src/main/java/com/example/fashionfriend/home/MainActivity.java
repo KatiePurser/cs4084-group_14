@@ -27,6 +27,7 @@ import com.applandeo.materialcalendarview.CalendarDay;
 import com.applandeo.materialcalendarview.CalendarView;
 import com.applandeo.materialcalendarview.EventDay;
 import com.example.fashionfriend.BaseActivity;
+import com.example.fashionfriend.Outfits.OutfitList;
 import com.example.fashionfriend.R;
 import com.example.fashionfriend.addClothingItem.AddClothingItemActivity;
 import com.example.fashionfriend.data.database.FashionFriendDatabase;

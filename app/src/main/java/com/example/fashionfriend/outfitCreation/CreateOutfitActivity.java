@@ -78,7 +78,7 @@ public class CreateOutfitActivity extends BaseActivity implements CategoryAdapte
 
         // Check if we're in edit mode
         editMode = getIntent().getBooleanExtra("EDIT_MODE", false);
-        outfitId = getIntent().getLongExtra("outfitId", -1); // Changed from "OUTFIT_ID" to "outfitId"
+        int outfitId = getIntent().getIntExtra("outfitId", -1);
         String outfitItemsJson = getIntent().getStringExtra("OUTFIT_ITEMS_JSON");
 
 // Add logging to debug
