@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Button;
@@ -48,6 +49,7 @@ public class AddClothingItemActivity extends BaseActivity {
     private Uri selectedImageUri;
     private Button addItemButton;
     private EditText itemNameEditText;
+    private Spinner spinner;
     private ActivityResultLauncher<Intent> pickImageLauncher;
     private ActivityResultLauncher<String[]> requestPermissionsLauncher;
     private boolean cameraPermissionGranted = false;
@@ -132,7 +134,7 @@ public class AddClothingItemActivity extends BaseActivity {
                 });
         requestCameraPermission();
 
-        Spinner spinner = findViewById(R.id.clothingItemTypeSpinner);
+        spinner = findViewById(R.id.clothingItemTypeSpinner);
         if (spinner != null) {
             List<String> categories = loadCategoriesFromCSV("clothing_categories.csv");
             if (categories != null) {
@@ -158,16 +160,20 @@ public class AddClothingItemActivity extends BaseActivity {
         }
     }
 
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//    }
+    private void resetViews() {
+        selectedImageUri = null;
+        displayImage(null);
+        itemNameEditText.setText("");
+        spinner.setSelection(0);
+    }
 
     public void navigateToViewAndEditClothingItemActivity(long clothingItemId) {
         Intent intent = new Intent(this, ViewAndEditClothingItemActivity.class);
         intent.putExtra("clothingItemId", clothingItemId);
         startActivity(intent);
-        finish();
+
+        Handler handler = new Handler();
+        handler.postDelayed(this::resetViews, 500);
     }
 
     private void saveImageToPrivateStorageAndDatabase(Uri imageUri) {
