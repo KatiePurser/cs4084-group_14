@@ -39,16 +39,17 @@ public class WardrobeCategoryActivity extends BaseActivity {
     private WardrobeAdapter adapter;
     private WardrobeOutfitAdapter outfitAdapter;
     private RecyclerView recyclerView;
+    private String category;
 
 
-    protected void onCreate(Bundle savedInstanceState){
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_wardrobe_category);
         recyclerView = findViewById(R.id.recycler_view);
 
         Intent i = getIntent();
-        String category = i.getStringExtra("type");
+        category = i.getStringExtra("type");
 
         TextView title = findViewById(R.id.category_title);
         title.setText(category.toUpperCase());
@@ -65,13 +66,13 @@ public class WardrobeCategoryActivity extends BaseActivity {
 
         applySystemBarInsets(R.id.create_outfit);
 
-        if(category.equals("Outfits")){
+        if (category.equals("Outfits")) {
             //add appropriate text to add button
             TextView add_text = findViewById(R.id.add_button_text);
             add_text.setText("Add New Outfit");
             //retrieve outfits from the DB
             loadOutfitData();
-        }else{
+        } else {
             //add appropriate text to add button
             TextView add_text = findViewById(R.id.add_button_text);
             add_text.setText("Add New Clothing Item");
@@ -81,18 +82,29 @@ public class WardrobeCategoryActivity extends BaseActivity {
 
     }
 
-    private void setButtonClickListener(ImageButton button, String category){
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (category.equals("Outfits")) {
+            loadOutfitData();
+        } else {
+            loadClothingData(category);
+        }
+    }
+
+    private void setButtonClickListener(ImageButton button, String category) {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int id = button.getId();
                 // Handle button clicks based on their ID
                 if (id == R.id.add_button) {
-                    if(category.equals("Outfits")) {
+                    if (category.equals("Outfits")) {
                         Intent i = new Intent(WardrobeCategoryActivity.this, CreateOutfitActivity.class);
                         startActivity(i);
-                    }else{
+                    } else {
                         Intent i = new Intent(WardrobeCategoryActivity.this, AddClothingItemActivity.class);
+                        i.putExtra("category", category);
                         startActivity(i);
                     }
                 }
@@ -102,7 +114,7 @@ public class WardrobeCategoryActivity extends BaseActivity {
 
     private void setupRecyclerView() {
         adapter = new WardrobeAdapter(clothingItems, this); // Pass 'this' as the listener
-        GridLayoutManager layoutManager=new GridLayoutManager(this,2);
+        GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
     }
@@ -126,13 +138,12 @@ public class WardrobeCategoryActivity extends BaseActivity {
                 Log.d(TAG, "Retrieved " + items.size() + " clothing items from database");
 
 
-
                 // Update UI on main thread
                 runOnUiThread(() -> {
                     clothingItems = items;
 //                    setupRecyclerView();
                     adapter = new WardrobeAdapter(clothingItems, this);
-                    GridLayoutManager layoutManager=new GridLayoutManager(this,2);
+                    GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
                     recyclerView.setLayoutManager(layoutManager);
                     recyclerView.setAdapter(adapter);
 
@@ -153,7 +164,7 @@ public class WardrobeCategoryActivity extends BaseActivity {
         });
     }
 
-    private void loadOutfitData(){
+    private void loadOutfitData() {
         // Show loading indicator
         Toast.makeText(this, "Loading outfits...", Toast.LENGTH_SHORT).show();
 
@@ -172,14 +183,13 @@ public class WardrobeCategoryActivity extends BaseActivity {
                 Log.d(TAG, "Retrieved " + outfits.size() + " clothing items from database");
 
 
-
                 // Update UI on main thread
                 runOnUiThread(() -> {
                     outfitsList = outfits;
                     Log.d(TAG, outfitsList.size() + " items in outfitsList");
 //                    setupRecyclerView();
                     outfitAdapter = new WardrobeOutfitAdapter(outfitsList, this);
-                    GridLayoutManager layoutManager=new GridLayoutManager(this,2);
+                    GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
                     recyclerView.setLayoutManager(layoutManager);
                     recyclerView.setAdapter(outfitAdapter);
 
