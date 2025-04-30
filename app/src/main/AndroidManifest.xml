@@ -19,9 +19,6 @@
             android:exported="false"
             android:theme="@style/Theme.FashionFriend" />
         <activity
-            android:name=".Outfits.Wardrobe"
-            android:exported="false" />
-        <activity
             android:name=".viewAndEditOutfit.ViewAndEditOutfitActivity"
             android:exported="false" />
         <activity
