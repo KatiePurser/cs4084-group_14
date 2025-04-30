@@ -17,12 +17,14 @@ import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.fashionfriend.BaseActivity;
 import com.example.fashionfriend.R;
 import com.example.fashionfriend.data.database.ClothingItem;
 import com.example.fashionfriend.data.database.FashionFriendDatabase;
 import com.example.fashionfriend.data.database.Outfit;
+import com.example.fashionfriend.home.MainActivity;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -32,6 +34,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -74,15 +77,15 @@ public class OutfitImageActivity extends BaseActivity {
                     }
             );
 
-@Override
-protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_outfit_image);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_outfit_image);
 
-    setupToolbar();
-    configureBackButton(true);
+        setupToolbar();
+        configureBackButton(true);
 
-    applySystemBarInsets(R.id.outfit_image);
+        applySystemBarInsets(R.id.outfit_image);
 
         // Get outfit data from intent
         itemsJson = getIntent().getStringExtra("OUTFIT_ITEMS_JSON");
@@ -390,5 +393,10 @@ protected void onCreate(Bundle savedInstanceState) {
         clothingItems.put("Shoes", shoes);
 
         return clothingItems;
+    }
+
+    @Override
+    protected boolean shouldRestartOnResume() {
+        return false;
     }
 }
