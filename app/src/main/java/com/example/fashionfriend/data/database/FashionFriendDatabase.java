@@ -5,7 +5,7 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-@Database(entities = {ClothingItem.class, Outfit.class, Reminder.class}, version = 3)
+@Database(entities = {ClothingItem.class, Outfit.class, Reminder.class}, version = 3, exportSchema = false)
 public abstract class FashionFriendDatabase extends RoomDatabase {
 
     public abstract ClothingItemDao clothingItemDao();

@@ -10,4 +10,12 @@
 
     <!-- Starting Theme for Manifest -->
     <style name="Theme.App.Starting" parent="Theme.Splash" />
+
+
+    <style name="PopupMenuStyle" parent="Widget.AppCompat.PopupMenu">
+        <item name="android:popupBackground">@drawable/bg_popup_menu</item>
+        <item name="android:elevation">20dp</item>
+    </style>
+
+
 </resources>
