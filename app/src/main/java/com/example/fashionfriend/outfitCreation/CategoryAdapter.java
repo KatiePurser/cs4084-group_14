@@ -51,6 +51,15 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_category, parent, false);
         return new CategoryViewHolder(itemView);
     }
+    public void setSelectedItems(HashMap<String, String> items) {
+        // Copy the selected items
+        for (String category : items.keySet()) {
+            if (items.get(category) != null) {
+                selectedItems.put(category, items.get(category));
+            }
+        }
+        notifyDataSetChanged();
+    }
 
     @Override
     public void onBindViewHolder(@NonNull CategoryViewHolder holder, int position) {
