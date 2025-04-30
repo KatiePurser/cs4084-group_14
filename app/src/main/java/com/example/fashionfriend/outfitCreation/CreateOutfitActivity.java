@@ -47,7 +47,7 @@ public class CreateOutfitActivity extends BaseActivity implements CategoryAdapte
     private View previewScroll;
     private TextView noItemsText;
     private boolean editMode = false;
-    private long outfitId = -1;
+    private int outfitId = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

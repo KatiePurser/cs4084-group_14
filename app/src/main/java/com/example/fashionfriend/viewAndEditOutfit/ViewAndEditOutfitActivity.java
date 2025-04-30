@@ -12,10 +12,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
@@ -28,10 +30,12 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
+import com.example.fashionfriend.BaseActivity;
 import com.example.fashionfriend.R;
 import com.example.fashionfriend.data.database.ClothingItem;
 import com.example.fashionfriend.data.database.FashionFriendDatabase;
 import com.example.fashionfriend.data.database.Outfit;
+import com.example.fashionfriend.home.MainActivity;
 import com.example.fashionfriend.outfitCreation.CreateOutfitActivity;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -51,7 +55,7 @@ import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class ViewAndEditOutfitActivity extends AppCompatActivity {
+public class ViewAndEditOutfitActivity extends BaseActivity {
     private static final String TAG = "ViewAndEditOutfitActivity";
 
     private ViewAndEditOutfitViewModel viewModel;
@@ -85,9 +89,15 @@ public class ViewAndEditOutfitActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_view_and_edit_outfit);
 
+        setupToolbar();
+        configureBackButton(true, () -> {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intent);
+        });
+
         // Initialize ViewModel
         viewModel = new ViewModelProvider(this).get(ViewAndEditOutfitViewModel.class);
-
         // Find views
         outfitNameTextView = findViewById(R.id.outfit_name_text_view);
         outfitNameEditText = findViewById(R.id.outfit_name_edit_text);
