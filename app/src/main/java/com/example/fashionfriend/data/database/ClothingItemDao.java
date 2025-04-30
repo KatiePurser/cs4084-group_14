@@ -15,6 +15,9 @@ public interface ClothingItemDao {
     @Query("SELECT * FROM clothing_items WHERE id = :id")
     ClothingItem getClothingItemById(long id);
 
+    @Query("SELECT * FROM clothing_items WHERE category = :category")
+    List<ClothingItem> getClothingItemsByCategory(String category);
+
     @Insert
     long insertClothingItem(ClothingItem clothingItem);
 

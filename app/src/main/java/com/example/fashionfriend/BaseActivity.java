@@ -18,6 +18,7 @@ import androidx.core.view.WindowInsetsControllerCompat;
 import com.example.fashionfriend.addClothingItem.AddClothingItemActivity;
 import com.example.fashionfriend.home.MainActivity;
 import com.example.fashionfriend.outfitCreation.CreateOutfitActivity;
+import com.example.fashionfriend.wardrobe.WardrobeActivity;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
@@ -53,6 +54,8 @@ public abstract class BaseActivity extends AppCompatActivity {
                     } else if (itemId == R.id.menu_add_item) {
                         startActivity(new Intent(this, AddClothingItemActivity.class));
                         return true;
+                    }else if (itemId == R.id.menu_wardrobe) {
+                        startActivity(new Intent( this, WardrobeActivity.class));
                     } else if (itemId == R.id.menu_outfits) {
                         startActivity(new Intent(this, CreateOutfitActivity.class));
                         return true;
