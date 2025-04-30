@@ -35,6 +35,7 @@ import com.example.fashionfriend.data.database.ReminderDao;
 import com.example.fashionfriend.data.database.Reminder;
 import com.example.fashionfriend.outfitCreation.CreateOutfitActivity;
 import com.example.fashionfriend.viewAndEditOutfit.ViewAndEditOutfitActivity;
+import com.example.fashionfriend.wardrobe.WardrobeActivity;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -206,6 +207,7 @@ public class MainActivity extends BaseActivity {
                     startActivity(new Intent(MainActivity.this, AddClothingItemActivity.class));
                 } else if (id == R.id.wardrobe_button) {
                     // Navigate to wardrobe view (implementation pending)
+                    startActivity(new Intent(MainActivity.this, WardrobeActivity.class));
                 } else if (id == R.id.outfits_button) {
                       // Navigates to outfits view
                       Intent intent = new Intent(MainActivity.this, OutfitList.class);
