@@ -1,5 +1,7 @@
 package com.example.fashionfriend.viewAndEditOutfit;
 
+import static androidx.core.util.TypedValueCompat.dpToPx;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -91,14 +93,21 @@ public class ViewAndEditOutfitActivity extends BaseActivity {
         setContentView(R.layout.activity_view_and_edit_outfit);
 
         setupToolbar();
+        // Configure back button with proper handling for edit mode
         configureBackButton(true, () -> {
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            startActivity(intent);
+            // Check if we're in edit mode first
+            if (outfitNameEditText.getVisibility() == View.VISIBLE) {
+                toggleEditMode(false); // Just cancel edit mode instead of going back
+            } else {
+                // Only navigate back if not in edit mode
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
+            }
         });
-
         // Initialize ViewModel
         viewModel = new ViewModelProvider(this).get(ViewAndEditOutfitViewModel.class);
+
         // Find views
         outfitNameTextView = findViewById(R.id.outfit_name_text_view);
         outfitNameEditText = findViewById(R.id.outfit_name_edit_text);
@@ -111,39 +120,66 @@ public class ViewAndEditOutfitActivity extends BaseActivity {
         previewScroll = findViewById(R.id.preview_scroll);
         noItemsText = findViewById(R.id.no_items_text);
 
+        // Verify all views are found
+        if (outfitNameTextView == null || outfitNameEditText == null || outfitImageView == null ||
+                editOutfitButton == null || saveOutfitButton == null || cancelEditButton == null) {
+            Log.e(TAG, "Error: One or more views not found");
+            Toast.makeText(this, "Error initializing views", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
 
         // Load clothing data to populate clothingItemPaths
         loadClothingData();
 
-        // Set up image picker
+        // Set up image picker with improved error handling
         pickImageLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
                         try {
                             selectedImageUri = result.getData().getData();
+                            Log.d(TAG, "Image selected: " + selectedImageUri);
                             if (selectedImageUri != null) {
-                                Glide.with(this).load(selectedImageUri).into(outfitImageView);
+                                // Show loading indicator
+                                Toast.makeText(this, "Loading image...", Toast.LENGTH_SHORT).show();
+
+                                // Load image with Glide for better handling
+                                Glide.with(this)
+                                        .load(selectedImageUri)
+                                        .centerCrop()
+                                        .into(outfitImageView);
+
                                 newImageSelected = true;
+                                Toast.makeText(this, "Image selected. Click Save to apply changes.", Toast.LENGTH_SHORT).show();
                             }
                         } catch (Exception e) {
                             Log.e(TAG, "Error loading image", e);
-                            Toast.makeText(this, "Error loading image", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this, "Error loading image: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
+                    } else {
+                        Log.d(TAG, "Image selection cancelled or failed");
                     }
                 }
         );
 
-        // Set up button listeners
-        editOutfitButton.setOnClickListener(v -> toggleEditMode(true));
+        // Set up button listeners with explicit debugging
+        editOutfitButton.setOnClickListener(v -> {
+            Log.d(TAG, "Edit outfit button clicked via listener");
+            toggleEditMode(true);
+        });
+
         saveOutfitButton.setOnClickListener(v -> saveChanges());
         cancelEditButton.setOnClickListener(v -> toggleEditMode(false));
         deleteOutfitButton.setOnClickListener(v -> confirmDelete());
 
-        // Set up image click listener (only active in edit mode)
+        // Set up image click listener with improved logging
         outfitImageView.setOnClickListener(v -> {
             if (outfitNameEditText.getVisibility() == View.VISIBLE) {
+                Log.d(TAG, "Image clicked in edit mode, opening image picker");
                 openImagePicker();
+            } else {
+                Log.d(TAG, "Image clicked but not in edit mode");
             }
         });
 
@@ -240,7 +276,10 @@ public class ViewAndEditOutfitActivity extends BaseActivity {
         if (outfit.getImagePath() != null && !outfit.getImagePath().isEmpty()) {
             File imageFile = new File(outfit.getImagePath());
             if (imageFile.exists()) {
-                Glide.with(this).load(imageFile).into(outfitImageView);
+                Glide.with(this)
+                        .load(imageFile)
+                        .fitCenter()  // Use fitCenter to ensure the image fits properly
+                        .into(outfitImageView);
             } else {
                 // Try to find the file by name in the files directory
                 String fileName = imageFile.getName();
@@ -248,7 +287,10 @@ public class ViewAndEditOutfitActivity extends BaseActivity {
 
                 if (alternateFile.exists()) {
                     Log.d(TAG, "Loading image from alternate path: " + alternateFile.getAbsolutePath());
-                    Glide.with(this).load(alternateFile).into(outfitImageView);
+                    Glide.with(this)
+                            .load(alternateFile)
+                            .fitCenter()  // Use fitCenter to ensure the image fits properly
+                            .into(outfitImageView);
 
                     // Update the path in the outfit object for future use
                     outfit.setImagePath(alternateFile.getAbsolutePath());
@@ -256,12 +298,18 @@ public class ViewAndEditOutfitActivity extends BaseActivity {
                 } else {
                     Log.e(TAG, "Image file not found: " + outfit.getImagePath());
                     // Load default image
-                    Glide.with(this).load(R.drawable.ic_hanger).into(outfitImageView);
+                    Glide.with(this)
+                            .load(R.drawable.ic_hanger)
+                            .fitCenter()  // Use fitCenter to ensure the image fits properly
+                            .into(outfitImageView);
                 }
             }
         } else {
             // Load default image
-            Glide.with(this).load(R.drawable.ic_hanger).into(outfitImageView);
+            Glide.with(this)
+                    .load(R.drawable.ic_hanger)
+                    .fitCenter()  // Use fitCenter to ensure the image fits properly
+                    .into(outfitImageView);
         }
 
         // Parse and display selected items
@@ -364,33 +412,49 @@ public class ViewAndEditOutfitActivity extends BaseActivity {
         }
     }
 
+    // Improved toggleEditMode method
     private void toggleEditMode(boolean editMode) {
+        Log.d(TAG, "Toggling edit mode: " + editMode);
+
         if (editMode) {
             // Switch to edit mode
             outfitNameTextView.setVisibility(View.GONE);
             outfitNameEditText.setVisibility(View.VISIBLE);
+            outfitNameEditText.setText(outfitNameTextView.getText());  // Ensure text is copied over
 
             // Hide outfit items section
-            findViewById(R.id.items_title).setVisibility(View.GONE);
-            findViewById(R.id.edit_items_button).setVisibility(View.GONE);
-            findViewById(R.id.preview_card).setVisibility(View.GONE);
+            View itemsTitle = findViewById(R.id.items_title);
+            View editItemsButton = findViewById(R.id.edit_items_button);
+            View previewCard = findViewById(R.id.items_section);
+
+            if (itemsTitle != null) itemsTitle.setVisibility(View.GONE);
+            if (editItemsButton != null) editItemsButton.setVisibility(View.GONE);
+            if (previewCard != null) previewCard.setVisibility(View.GONE);
 
             editOutfitButton.setVisibility(View.GONE);
             saveOutfitButton.setVisibility(View.VISIBLE);
             cancelEditButton.setVisibility(View.VISIBLE);
             deleteOutfitButton.setVisibility(View.GONE); // Hide delete button in edit mode
 
+            // Make image clickable and provide visual feedback
             outfitImageView.setClickable(true);
             outfitImageView.setBackgroundColor(Color.LTGRAY);
+
+            // Add a visual indicator that the image is clickable
+            Toast.makeText(this, "Tap the image to change it", Toast.LENGTH_SHORT).show();
         } else {
             // Switch to view mode
             outfitNameTextView.setVisibility(View.VISIBLE);
             outfitNameEditText.setVisibility(View.GONE);
 
             // Show outfit items section
-            findViewById(R.id.items_title).setVisibility(View.VISIBLE);
-            findViewById(R.id.edit_items_button).setVisibility(View.VISIBLE);
-            findViewById(R.id.preview_card).setVisibility(View.VISIBLE);
+            View itemsTitle = findViewById(R.id.items_title);
+            View editItemsButton = findViewById(R.id.edit_items_button);
+            View previewCard = findViewById(R.id.items_section);
+
+            if (itemsTitle != null) itemsTitle.setVisibility(View.VISIBLE);
+            if (editItemsButton != null) editItemsButton.setVisibility(View.VISIBLE);
+            if (previewCard != null) previewCard.setVisibility(View.VISIBLE);
 
             editOutfitButton.setVisibility(View.VISIBLE);
             saveOutfitButton.setVisibility(View.GONE);
@@ -409,15 +473,29 @@ public class ViewAndEditOutfitActivity extends BaseActivity {
             newImageSelected = false;
             selectedImageUri = null;
         }
+
+        // Log the final state of key elements
+        Log.d(TAG, "After toggle - Edit outfit button visibility: " +
+                (editOutfitButton.getVisibility() == View.VISIBLE ? "VISIBLE" : "GONE"));
+
+        View editItemsButton = findViewById(R.id.edit_items_button);
+        if (editItemsButton != null) {
+            Log.d(TAG, "After toggle - Edit items button visibility: " +
+                    (editItemsButton.getVisibility() == View.VISIBLE ? "VISIBLE" : "GONE"));
+        }
     }
 
 
 
+    // Improved saveChanges method
     private void saveChanges() {
         if (currentOutfit == null) {
             Toast.makeText(this, "Error: No outfit data", Toast.LENGTH_SHORT).show();
             return;
         }
+
+        // Show loading indicator
+        Toast.makeText(this, "Saving changes...", Toast.LENGTH_SHORT).show();
 
         // Validate input
         String outfitName = outfitNameEditText.getText().toString().trim();
@@ -428,15 +506,18 @@ public class ViewAndEditOutfitActivity extends BaseActivity {
 
         // Update outfit object
         currentOutfit.setName(outfitName);
+        outfitNameTextView.setText(outfitName);  // Update the text view immediately
 
         // Handle image if a new one was selected
         if (newImageSelected && selectedImageUri != null) {
             String previousImagePath = currentOutfit.getImagePath();
+            Log.d(TAG, "Saving new image to replace: " + previousImagePath);
 
             // Save new image
             String newImagePath = saveImageToInternalStorage(selectedImageUri);
             if (newImagePath != null) {
                 currentOutfit.setImagePath(newImagePath);
+                Log.d(TAG, "New image saved at: " + newImagePath);
 
                 // Delete old image if it exists
                 if (previousImagePath != null && !previousImagePath.isEmpty()) {
@@ -476,9 +557,17 @@ public class ViewAndEditOutfitActivity extends BaseActivity {
                 .show();
     }
 
+    // Improved openImagePicker method
     private void openImagePicker() {
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        pickImageLauncher.launch(intent);
+        try {
+            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            intent.setType("image/*");
+            Log.d(TAG, "Launching image picker");
+            pickImageLauncher.launch(intent);
+        } catch (Exception e) {
+            Log.e(TAG, "Error opening image picker", e);
+            Toast.makeText(this, "Error opening image picker: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 
     private String saveImageToInternalStorage(Uri imageUri) {
@@ -529,6 +618,12 @@ public class ViewAndEditOutfitActivity extends BaseActivity {
         }
     }
 
+    // Add this method to handle XML onClick if needed
+    public void onEditOutfitClicked(View view) {
+        Log.d(TAG, "Edit outfit button clicked via XML onClick");
+        toggleEditMode(true);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -551,3 +646,4 @@ public class ViewAndEditOutfitActivity extends BaseActivity {
         }
     }
 }
+

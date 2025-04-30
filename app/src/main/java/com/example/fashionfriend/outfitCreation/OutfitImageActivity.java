@@ -1,6 +1,7 @@
 package com.example.fashionfriend.outfitCreation;
 
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -27,12 +28,15 @@ import com.example.fashionfriend.home.MainActivity;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -221,6 +225,9 @@ protected void onCreate(Bundle savedInstanceState) {
         // Try to load from database in background thread
         Executors.newSingleThreadExecutor().execute(() -> {
             try {
+                // Load categories from CSV first
+                List<String> allCategories = loadCategoriesFromCSV("clothing_categories.csv");
+
                 // Get database instance
                 FashionFriendDatabase db = FashionFriendDatabase.getDatabase(this);
 
@@ -230,6 +237,12 @@ protected void onCreate(Bundle savedInstanceState) {
                 // Organize by category
                 HashMap<String, HashMap<String, Integer>> categoryItems = new HashMap<>();
                 HashMap<String, HashMap<String, String>> categoryItemPaths = new HashMap<>();
+
+                // Initialize all categories from CSV
+                for (String category : allCategories) {
+                    categoryItems.put(category, new HashMap<>());
+                    categoryItemPaths.put(category, new HashMap<>());
+                }
 
                 for (ClothingItem item : items) {
                     String category = item.getCategory();
@@ -245,7 +258,7 @@ protected void onCreate(Bundle savedInstanceState) {
                 }
 
                 // If no items found, use default data
-                if (categoryItems.isEmpty()) {
+                if (items.isEmpty()) {
                     categoryItems = getDefaultClothingItems();
                 }
 
@@ -269,6 +282,27 @@ protected void onCreate(Bundle savedInstanceState) {
             }
         });
     }
+
+    private List<String> loadCategoriesFromCSV(String filename) {
+        List<String> categories = new ArrayList<>();
+        AssetManager assetManager = getAssets();
+        try {
+            InputStream inputStream = assetManager.open(filename);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                categories.add(line.trim()); // Add each line (category)
+            }
+            reader.close();
+            inputStream.close();
+            return categories;
+        } catch (IOException e) {
+            Log.e(TAG, "Error reading CSV: " + e.getMessage());
+            return new ArrayList<>(); // Return empty list on failure
+        }
+    }
+
+
 
     private void updatePreview() {
         // Check if we have at least one item selected
