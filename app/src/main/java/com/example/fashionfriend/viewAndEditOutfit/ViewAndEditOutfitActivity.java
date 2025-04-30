@@ -28,6 +28,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.bumptech.glide.Glide;
 import com.example.fashionfriend.BaseActivity;
@@ -109,6 +110,7 @@ public class ViewAndEditOutfitActivity extends BaseActivity {
         previewContainer = findViewById(R.id.preview_container);
         previewScroll = findViewById(R.id.preview_scroll);
         noItemsText = findViewById(R.id.no_items_text);
+
 
         // Load clothing data to populate clothingItemPaths
         loadClothingData();
@@ -368,9 +370,15 @@ public class ViewAndEditOutfitActivity extends BaseActivity {
             outfitNameTextView.setVisibility(View.GONE);
             outfitNameEditText.setVisibility(View.VISIBLE);
 
+            // Hide outfit items section
+            findViewById(R.id.items_title).setVisibility(View.GONE);
+            findViewById(R.id.edit_items_button).setVisibility(View.GONE);
+            findViewById(R.id.preview_card).setVisibility(View.GONE);
+
             editOutfitButton.setVisibility(View.GONE);
             saveOutfitButton.setVisibility(View.VISIBLE);
             cancelEditButton.setVisibility(View.VISIBLE);
+            deleteOutfitButton.setVisibility(View.GONE); // Hide delete button in edit mode
 
             outfitImageView.setClickable(true);
             outfitImageView.setBackgroundColor(Color.LTGRAY);
@@ -379,9 +387,15 @@ public class ViewAndEditOutfitActivity extends BaseActivity {
             outfitNameTextView.setVisibility(View.VISIBLE);
             outfitNameEditText.setVisibility(View.GONE);
 
+            // Show outfit items section
+            findViewById(R.id.items_title).setVisibility(View.VISIBLE);
+            findViewById(R.id.edit_items_button).setVisibility(View.VISIBLE);
+            findViewById(R.id.preview_card).setVisibility(View.VISIBLE);
+
             editOutfitButton.setVisibility(View.VISIBLE);
             saveOutfitButton.setVisibility(View.GONE);
             cancelEditButton.setVisibility(View.GONE);
+            deleteOutfitButton.setVisibility(View.VISIBLE); // Show delete button in view mode
 
             outfitImageView.setClickable(false);
             outfitImageView.setBackgroundColor(Color.TRANSPARENT);
@@ -396,6 +410,8 @@ public class ViewAndEditOutfitActivity extends BaseActivity {
             selectedImageUri = null;
         }
     }
+
+
 
     private void saveChanges() {
         if (currentOutfit == null) {
