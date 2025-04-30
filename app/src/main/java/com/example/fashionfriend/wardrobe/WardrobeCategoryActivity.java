@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.fashionfriend.BaseActivity;
 import com.example.fashionfriend.R;
 import com.example.fashionfriend.addClothingItem.AddClothingItemActivity;
 import com.example.fashionfriend.data.database.ClothingItem;
@@ -30,7 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Executors;
 
-public class WardrobeCategoryActivity extends AppCompatActivity {
+public class WardrobeCategoryActivity extends BaseActivity {
 
     private static final String TAG = "WardrobeActivity";
     private List<ClothingItem> clothingItems = new ArrayList<>();
@@ -54,6 +55,15 @@ public class WardrobeCategoryActivity extends AppCompatActivity {
 
         ImageButton add = findViewById(R.id.add_button);
         setButtonClickListener(add, category);
+
+        setupToolbar();
+        configureBackButton(true, () -> {
+            Intent intent = new Intent(this, WardrobeActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intent);
+        });
+
+        applySystemBarInsets(R.id.create_outfit);
 
         if(category.equals("Outfits")){
             //add appropriate text to add button
@@ -121,7 +131,7 @@ public class WardrobeCategoryActivity extends AppCompatActivity {
                 runOnUiThread(() -> {
                     clothingItems = items;
 //                    setupRecyclerView();
-                    adapter = new WardrobeAdapter(clothingItems, this); // Pass 'this' as the listener
+                    adapter = new WardrobeAdapter(clothingItems, this);
                     GridLayoutManager layoutManager=new GridLayoutManager(this,2);
                     recyclerView.setLayoutManager(layoutManager);
                     recyclerView.setAdapter(adapter);
@@ -166,11 +176,12 @@ public class WardrobeCategoryActivity extends AppCompatActivity {
                 // Update UI on main thread
                 runOnUiThread(() -> {
                     outfitsList = outfits;
+                    Log.d(TAG, outfitsList.size() + " items in outfitsList");
 //                    setupRecyclerView();
-                    outfitAdapter = new WardrobeOutfitAdapter(outfitsList, this); // Pass 'this' as the listener
+                    outfitAdapter = new WardrobeOutfitAdapter(outfitsList, this);
                     GridLayoutManager layoutManager=new GridLayoutManager(this,2);
                     recyclerView.setLayoutManager(layoutManager);
-                    recyclerView.setAdapter(adapter);
+                    recyclerView.setAdapter(outfitAdapter);
 
                     Log.d(TAG, "UI updated with clothing items");
                 });
