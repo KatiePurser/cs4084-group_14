@@ -42,7 +42,7 @@ public class WardrobeOutfitAdapter extends RecyclerView.Adapter<WardrobeOutfitAd
     @Override
     public void onBindViewHolder(@NonNull WardrobeOutfitAdapter.WardrobeOutfitViewHolder holder, int position) {
         Outfit outfit = outfitList.get(position);
-        holder.setOutfitImage(outfit);
+        holder.setImage(outfit);
         holder.name.setText(outfit.getName());
 //        holder.itemView.setOnClickListener(new View.OnClickListener() {  // <--- here
 //            @Override
@@ -73,35 +73,7 @@ public class WardrobeOutfitAdapter extends RecyclerView.Adapter<WardrobeOutfitAd
             name = itemView.findViewById(R.id.card_text);
         }
 
-        public void setImage(ClothingItem item){
-            boolean imageLoaded = false;
-
-            String imagePath = item.getImagePath();
-            if (imagePath != null && !imagePath.isEmpty()) {
-                // Load image from file path
-                Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
-                if (bitmap != null) {
-                    image.setImageBitmap(bitmap);
-                    image.setVisibility(View.VISIBLE);
-                    imageLoaded = true;
-                }
-            }
-
-            // Fallback to placeholder only if path loading fails
-//            if (!imageLoaded) {
-//                Integer imageResource = items.get(selectedItem);
-//                if (imageResource != null) {
-//                    itemImage.setImageResource(imageResource);
-//                    itemImage.setVisibility(View.VISIBLE);
-//                } else {
-//                    itemImage.setVisibility(View.INVISIBLE);
-//                    selectedItems.put(category, null);
-//                    listener.onItemSelected(category, null);
-//                }
-//            }
-        }
-
-        public void setOutfitImage(Outfit outfit){
+        public void setImage(Outfit outfit){
             boolean imageLoaded = false;
 
             String imagePath = outfit.getImagePath();
@@ -128,5 +100,7 @@ public class WardrobeOutfitAdapter extends RecyclerView.Adapter<WardrobeOutfitAd
 //                }
 //            }
         }
+
+
     }
 }
