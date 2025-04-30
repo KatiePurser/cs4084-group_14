@@ -65,21 +65,16 @@ public class MainActivity extends BaseActivity {
 
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
+
         setupToolbar();
+        configureBackButton(false, null); // No back button
 
         // Initialise Room DAO
         reminderDao = FashionFriendDatabase.getDatabase(this).reminderDao();
 
         checkForTodayReminder();
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+        applySystemBarInsets(R.id.main);
 
         add_item_button = findViewById(R.id.add_button);
         wardrobe_button = findViewById(R.id.wardrobe_button);

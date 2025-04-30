@@ -15,22 +15,24 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <!-- Back button on the left -->
         <ImageButton
-            android:id="@+id/menu_icon"
+            android:id="@+id/back_button"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:src="@drawable/ic_menu"
+            android:src="@drawable/ic_back_icon"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:scaleType="fitCenter"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" />
 
+        <!-- Menu icon on the right -->
         <ImageButton
-            android:id="@+id/profile_icon"
+            android:id="@+id/menu_icon"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:src="@drawable/ic_profile"
+            android:src="@drawable/ic_menu"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:scaleType="fitCenter"
             app:layout_constraintEnd_toEndOf="parent"
