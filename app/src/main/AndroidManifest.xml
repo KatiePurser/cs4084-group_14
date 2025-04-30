@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:allowBackup="true"
@@ -14,7 +14,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FashionFriend"
         tools:targetApi="31">
-
+        <activity
+            android:name=".Outfits.OutfitList"
+            android:exported="false"
+            android:theme="@style/Theme.FashionFriend" />
+        <activity
+            android:name=".Outfits.Wardrobe"
+            android:exported="false" />
+        <activity
+            android:name=".viewAndEditOutfit.ViewAndEditOutfitActivity"
+            android:exported="false" />
         <activity
             android:name=".outfitCreation.OutfitImageActivity"
             android:exported="false" />
@@ -31,15 +40,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".addClothingItem.AddClothingItemActivity"
-            android:exported="false">
-        </activity>
+            android:exported="false" />
         <activity
             android:name=".viewAndEditClothingItem.ViewAndEditClothingItemActivity"
-            android:exported="false">
-        </activity>
+            android:exported="false" />
     </application>
 
 </manifest>

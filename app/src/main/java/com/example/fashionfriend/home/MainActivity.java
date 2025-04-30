@@ -27,12 +27,15 @@ import androidx.core.view.WindowInsetsCompat;
 import com.applandeo.materialcalendarview.CalendarDay;
 import com.applandeo.materialcalendarview.CalendarView;
 import com.applandeo.materialcalendarview.EventDay;
+import com.example.fashionfriend.Outfits.OutfitList;
 import com.example.fashionfriend.R;
 import com.example.fashionfriend.addClothingItem.AddClothingItemActivity;
 import com.example.fashionfriend.data.database.FashionFriendDatabase;
 import com.example.fashionfriend.data.database.ReminderDao;
 import com.example.fashionfriend.data.database.Reminder;
 import com.example.fashionfriend.outfitCreation.CreateOutfitActivity;
+import com.example.fashionfriend.viewAndEditOutfit.ViewAndEditOutfitActivity;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -209,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
                     // Navigate to wardrobe view (implementation pending)
                 } else if (id == R.id.outfits_button) {
                       // Navigates to outfits view
-                      Intent intent = new Intent(MainActivity.this, CreateOutfitActivity.class);
+                      Intent intent = new Intent(MainActivity.this, OutfitList.class);
                       startActivity(intent);
 
                 }
