@@ -99,7 +99,8 @@ public class AddClothingItemActivity extends AppCompatActivity {
             if (selectedImageUri == null) {
                 Toast.makeText(this, "Please select an image first.", Toast.LENGTH_SHORT).show();
             } else if (itemNameEditText.getText().toString().trim().isEmpty()) {
-                Toast.makeText(this, "Please enter an item name.", Toast.LENGTH_SHORT).show();
+                itemNameEditText.setError("Please enter an item name.");
+                itemNameEditText.setText("");
             }else {
                 saveImageToPrivateStorageAndDatabase(selectedImageUri);
             }
@@ -161,6 +162,7 @@ public class AddClothingItemActivity extends AppCompatActivity {
         Intent intent = new Intent(this, ViewAndEditClothingItemActivity.class);
         intent.putExtra("clothingItemId", clothingItemId);
         startActivity(intent);
+        finish();
     }
 
     private void saveImageToPrivateStorageAndDatabase(Uri imageUri) {
@@ -175,10 +177,10 @@ public class AddClothingItemActivity extends AppCompatActivity {
 
             addClothingItemViewModel.insertClothingItem(new ClothingItem(itemName, itemType, copiedImagePath));
 
-            Toast.makeText(this, "Image with name " + itemName + " and type " + itemType + " saved to private storage: " + copiedImagePath, Toast.LENGTH_LONG).show();
+//            Toast.makeText(this, "Image with name " + itemName + " and type " + itemType + " saved to private storage: " + copiedImagePath, Toast.LENGTH_LONG).show();
         } else {
             Log.e("ImageStorage", "Failed to copy image to private storage.");
-            Toast.makeText(this, "Failed to save image", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "Failed to save image", Toast.LENGTH_SHORT).show();
         }
     }
 
