@@ -29,7 +29,6 @@ import com.bumptech.glide.Glide;
 import com.example.fashionfriend.BaseActivity;
 import com.example.fashionfriend.R;
 import com.example.fashionfriend.data.database.ClothingItem;
-import com.example.fashionfriend.home.MainActivity;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.BufferedReader;
@@ -350,17 +349,8 @@ public class ViewAndEditClothingItemActivity extends BaseActivity {
         }
     }
 
-    // Handle back button press //
-    private boolean firstLaunch = true;
-
     @Override
-    protected void onResume() {
-        super.onResume();
-
-        if (firstLaunch) {
-            firstLaunch = false;
-        } else {
-            recreate();
-        }
+    protected boolean shouldRestartOnResume() {
+        return false;
     }
 }

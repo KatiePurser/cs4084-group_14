@@ -27,7 +27,6 @@ import androidx.lifecycle.ViewModelProvider;
 import com.bumptech.glide.Glide;
 import com.example.fashionfriend.BaseActivity;
 import com.example.fashionfriend.R;
-import com.example.fashionfriend.home.MainActivity;
 import com.example.fashionfriend.viewAndEditClothingItem.ViewAndEditClothingItemActivity;
 import com.example.fashionfriend.data.database.ClothingItem;
 
@@ -260,7 +259,6 @@ public class AddClothingItemActivity extends BaseActivity {
         }
     }
 
-
     private List<String> loadCategoriesFromCSV(String filename) {
         List<String> categories = new ArrayList<>();
         AssetManager assetManager = getAssets();
@@ -280,17 +278,8 @@ public class AddClothingItemActivity extends BaseActivity {
         }
     }
 
-    // Handle back button press //
-    private boolean firstLaunch = true;
-
     @Override
-    protected void onResume() {
-        super.onResume();
-
-        if (firstLaunch) {
-            firstLaunch = false;
-        } else {
-            recreate();
-        }
+    protected boolean shouldRestartOnResume() {
+        return false;
     }
 }

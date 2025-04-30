@@ -17,14 +17,12 @@ import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.fashionfriend.BaseActivity;
 import com.example.fashionfriend.R;
 import com.example.fashionfriend.data.database.ClothingItem;
 import com.example.fashionfriend.data.database.FashionFriendDatabase;
 import com.example.fashionfriend.data.database.Outfit;
-import com.example.fashionfriend.home.MainActivity;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -34,7 +32,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -393,19 +390,5 @@ protected void onCreate(Bundle savedInstanceState) {
         clothingItems.put("Shoes", shoes);
 
         return clothingItems;
-    }
-
-    // Handle back button press //
-    private boolean firstLaunch = true;
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        if (firstLaunch) {
-            firstLaunch = false;
-        } else {
-            recreate();
-        }
     }
 }

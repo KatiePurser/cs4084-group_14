@@ -1,19 +1,15 @@
 
 package com.example.fashionfriend.wardrobe;
 
-import static java.lang.Character.toUpperCase;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,11 +19,9 @@ import com.example.fashionfriend.addClothingItem.AddClothingItemActivity;
 import com.example.fashionfriend.data.database.ClothingItem;
 import com.example.fashionfriend.data.database.FashionFriendDatabase;
 import com.example.fashionfriend.data.database.Outfit;
-import com.example.fashionfriend.outfitCreation.CategoryAdapter;
 import com.example.fashionfriend.outfitCreation.CreateOutfitActivity;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Executors;
 
@@ -46,6 +40,7 @@ public class WardrobeCategoryActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_wardrobe_category);
+
         recyclerView = findViewById(R.id.recycler_view);
 
         Intent i = getIntent();
@@ -194,19 +189,5 @@ public class WardrobeCategoryActivity extends BaseActivity {
                 });
             }
         });
-    }
-
-    // Handle back button press //
-    private boolean firstLaunch = true;
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        if (firstLaunch) {
-            firstLaunch = false;
-        } else {
-            recreate();
-        }
     }
 }

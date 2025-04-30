@@ -8,24 +8,27 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.content.Intent;
 import android.os.Bundle;
+
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
+
 import androidx.activity.EdgeToEdge;
-import androidx.appcompat.widget.Toolbar;
+
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+
 import com.applandeo.materialcalendarview.CalendarDay;
 import com.applandeo.materialcalendarview.CalendarView;
 import com.applandeo.materialcalendarview.EventDay;
+
 import com.example.fashionfriend.BaseActivity;
 import com.example.fashionfriend.Outfits.OutfitList;
 import com.example.fashionfriend.R;
@@ -33,8 +36,6 @@ import com.example.fashionfriend.addClothingItem.AddClothingItemActivity;
 import com.example.fashionfriend.data.database.FashionFriendDatabase;
 import com.example.fashionfriend.data.database.ReminderDao;
 import com.example.fashionfriend.data.database.Reminder;
-import com.example.fashionfriend.outfitCreation.CreateOutfitActivity;
-import com.example.fashionfriend.viewAndEditOutfit.ViewAndEditOutfitActivity;
 import com.example.fashionfriend.wardrobe.WardrobeActivity;
 
 import java.util.ArrayList;
@@ -58,10 +59,14 @@ public class MainActivity extends BaseActivity {
         SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
         super.onCreate(savedInstanceState);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, 101);
-            }
+
+        Window window = getWindow();
+        window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimary));
+        window.setNavigationBarColor(ContextCompat.getColor(this, R.color.colorPrimary));
+
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, 101);
         }
 
         createNotificationChannel();
@@ -73,7 +78,6 @@ public class MainActivity extends BaseActivity {
         setupToolbar();
         configureBackButton(false); // No back button
 
-        // Initialise Room DAO
         reminderDao = FashionFriendDatabase.getDatabase(this).reminderDao();
 
         checkForTodayReminder();
@@ -242,5 +246,10 @@ public class MainActivity extends BaseActivity {
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
         }
+    }
+
+    @Override
+    protected boolean shouldRestartOnResume() {
+        return false;
     }
 }

@@ -1,17 +1,12 @@
-
 package com.example.fashionfriend.wardrobe;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
-
 import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.fashionfriend.BaseActivity;
 import com.example.fashionfriend.R;
-import com.example.fashionfriend.home.MainActivity;
 
 public class WardrobeActivity extends BaseActivity {
 
@@ -73,19 +68,8 @@ public class WardrobeActivity extends BaseActivity {
         });
     }
 
-    // Handle back button press //
-    private boolean firstLaunch = true;
-
     @Override
-    protected void onResume() {
-        super.onResume();
-
-        if (firstLaunch) {
-            firstLaunch = false;
-        } else {
-            recreate();
-        }
+    protected boolean shouldRestartOnResume() {
+        return false;
     }
-
-
 }

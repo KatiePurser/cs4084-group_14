@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fashionfriend.BaseActivity;
-import com.example.fashionfriend.home.MainActivity;
 import com.example.fashionfriend.R;
 import com.example.fashionfriend.data.database.ClothingItem;
 import com.example.fashionfriend.data.database.FashionFriendDatabase;
@@ -445,20 +444,4 @@ public class CreateOutfitActivity extends BaseActivity implements CategoryAdapte
             return new ArrayList<>(); // Return empty list on failure
         }
     }
-
-    // Handle back button press //
-    private boolean firstLaunch = true;
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        if (firstLaunch) {
-            firstLaunch = false;
-        } else {
-            recreate();
-        }
-    }
-
-
 }
