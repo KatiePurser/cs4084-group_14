@@ -60,7 +60,6 @@ public class CreateOutfitActivity extends BaseActivity implements CategoryAdapte
 
         setupToolbar();
         configureBackButton(true);
-
         applySystemBarInsets(R.id.create_outfit);
 
         // Initialize views
@@ -107,13 +106,7 @@ public class CreateOutfitActivity extends BaseActivity implements CategoryAdapte
                 nextButton.setText("Save Changes");
             }
         }
-
-        // Hide the menu icon in toolbar since we're using the cancel button
-        ImageView menuIcon = findViewById(R.id.menu_icon);
-        if (menuIcon != null) {
-            menuIcon.setVisibility(View.GONE);
-        }
-
+        
         loadClothingData();  // Load data from database
 
         // Next Button Listener
