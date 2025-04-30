@@ -148,6 +148,12 @@ public class AddClothingItemActivity extends BaseActivity {
                 );
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinner.setAdapter(adapter);
+
+                Intent intent = getIntent();
+                String category = intent.getStringExtra("category");
+                if (category != null) {
+                    spinner.setSelection(adapter.getPosition(category));
+                }
             } else {
                 Log.e("AddClothingItemActivity", "Failed to load clothing categories from CSV.");
             }
@@ -156,6 +162,11 @@ public class AddClothingItemActivity extends BaseActivity {
             Log.e("AddClothingItemActivity", "Spinner not found in the layout.");
         }
     }
+
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//    }
 
     public void navigateToViewAndEditClothingItemActivity(long clothingItemId) {
         Intent intent = new Intent(this, ViewAndEditClothingItemActivity.class);
