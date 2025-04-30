@@ -27,13 +27,14 @@ import com.applandeo.materialcalendarview.CalendarDay;
 import com.applandeo.materialcalendarview.CalendarView;
 import com.applandeo.materialcalendarview.EventDay;
 import com.example.fashionfriend.BaseActivity;
+import com.example.fashionfriend.Outfits.OutfitList;
 import com.example.fashionfriend.R;
 import com.example.fashionfriend.addClothingItem.AddClothingItemActivity;
 import com.example.fashionfriend.data.database.FashionFriendDatabase;
 import com.example.fashionfriend.data.database.ReminderDao;
 import com.example.fashionfriend.data.database.Reminder;
 import com.example.fashionfriend.outfitCreation.CreateOutfitActivity;
-import com.example.fashionfriend.wardrobe.WardrobeActivity;
+import com.example.fashionfriend.viewAndEditOutfit.ViewAndEditOutfitActivity;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -205,10 +206,9 @@ public class MainActivity extends BaseActivity {
                     startActivity(new Intent(MainActivity.this, AddClothingItemActivity.class));
                 } else if (id == R.id.wardrobe_button) {
                     // Navigate to wardrobe view (implementation pending)
-                    startActivity(new Intent(MainActivity.this, WardrobeActivity.class));
                 } else if (id == R.id.outfits_button) {
                       // Navigates to outfits view
-                      Intent intent = new Intent(MainActivity.this, CreateOutfitActivity.class);
+                      Intent intent = new Intent(MainActivity.this, OutfitList.class);
                       startActivity(intent);
 
                 }

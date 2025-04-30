@@ -9,9 +9,12 @@
     tools:context=".outfitCreation.CreateOutfitActivity"
     android:id="@+id/create_outfit">
 
-    <include 
+    <include
         android:id="@+id/toolbar_layout"
-        layout="@layout/toolbar"/>
+        layout="@layout/toolbar"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <!-- ScrollView to enable scrolling -->
     <ScrollView
@@ -34,10 +37,11 @@
                 android:text="Create Outfit"
                 android:textSize="24sp"
                 android:textStyle="bold"
-                android:layout_marginTop="16dp"
+                android:textColor="@android:color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="16dp" />
 
             <!-- Outfit Preview Section -->
             <TextView
@@ -47,23 +51,23 @@
                 android:text="Outfit Preview"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:layout_marginTop="16dp"
-                android:layout_marginStart="16dp"
+                android:textColor="@android:color/white"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/create_outfit_title" />
+                app:layout_constraintTop_toBottomOf="@id/create_outfit_title"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp" />
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/preview_card"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="4dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/outfit_preview_title">
+                app:layout_constraintTop_toBottomOf="@id/outfit_preview_title"
+                app:layout_constraintWidth_percent="0.9"
+                android:layout_marginTop="8dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -105,26 +109,26 @@
                 android:text="Select Items"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:layout_marginTop="16dp"
-                android:layout_marginStart="16dp"
+                android:textColor="@android:color/black"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/preview_card" />
+                app:layout_constraintTop_toBottomOf="@id/preview_card"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp" />
 
             <!-- Fixed height RecyclerView -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/categories_recycler_view"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="16dp"
                 android:nestedScrollingEnabled="false"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/select_items_title"
-                app:layout_constraintBottom_toBottomOf="parent" />
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintWidth_percent="0.9"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
