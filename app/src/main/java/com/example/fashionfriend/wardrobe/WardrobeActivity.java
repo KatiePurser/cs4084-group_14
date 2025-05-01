@@ -34,7 +34,7 @@ public class WardrobeActivity extends BaseActivity {
         setupToolbar();
         configureBackButton(true);
 
-        applySystemBarInsets(R.id.create_outfit);
+        applySystemBarInsets(R.id.wardrobe);
     }
 
     private void setButtonClickListener(ImageButton button) {
