@@ -48,7 +48,9 @@ public abstract class BaseActivity extends AppCompatActivity {
                 popup.setOnMenuItemClickListener(item -> {
                     int itemId = item.getItemId();
                     if (itemId == R.id.menu_home) {
-                        startActivity(new Intent(this, MainActivity.class));
+                        Intent intent = new Intent(this, MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                        startActivity(intent);
                         return true;
                     } else if (itemId == R.id.menu_add_item) {
                         startActivity(new Intent(this, AddClothingItemActivity.class));
