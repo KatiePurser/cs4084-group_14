@@ -17,14 +17,13 @@ import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.fashionfriend.BaseActivity;
 import com.example.fashionfriend.R;
 import com.example.fashionfriend.data.database.ClothingItem;
 import com.example.fashionfriend.data.database.FashionFriendDatabase;
 import com.example.fashionfriend.data.database.Outfit;
-import com.example.fashionfriend.home.MainActivity;
+import com.example.fashionfriend.viewAndEditOutfit.ViewAndEditOutfitActivity;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -34,7 +33,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -172,9 +170,8 @@ public class OutfitImageActivity extends BaseActivity {
                         Toast.makeText(OutfitImageActivity.this,
                                 "Outfit saved successfully!", Toast.LENGTH_SHORT).show();
 
-                        // Return to main activity with success result
-                        setResult(RESULT_OK);
-                        finish();
+                        // Navigate to the ViewAndEditOutfitActivity with the new outfit ID
+                        navigateToViewAndEditOutfitActivity(outfitId);
                     } else {
                         Toast.makeText(OutfitImageActivity.this,
                                 "Error saving outfit", Toast.LENGTH_SHORT).show();
@@ -192,6 +189,14 @@ public class OutfitImageActivity extends BaseActivity {
                 });
             }
         });
+    }
+
+    // Method to navigate to the ViewAndEditOutfitActivity
+    private void navigateToViewAndEditOutfitActivity(long outfitId) {
+        Intent intent = new Intent(this, ViewAndEditOutfitActivity.class);
+        intent.putExtra("outfitId", outfitId);
+        startActivity(intent);
+        finish(); // Close this activity
     }
 
     private String saveImageToInternalStorage(Bitmap bitmap) {
@@ -253,11 +258,6 @@ public class OutfitImageActivity extends BaseActivity {
                     categoryItemPaths.get(category).put(item.getName(), item.getImagePath());
                 }
 
-                // If no items found, use default data
-                if (items.isEmpty()) {
-                    categoryItems = getDefaultClothingItems();
-                }
-
                 final HashMap<String, HashMap<String, Integer>> resultItems = categoryItems;
                 final HashMap<String, HashMap<String, String>> resultPaths = categoryItemPaths;
 
@@ -270,10 +270,10 @@ public class OutfitImageActivity extends BaseActivity {
             } catch (Exception e) {
                 Log.e(TAG, "Error loading clothing items from database", e);
 
-                // On error, use default data
+                // Just log the error without falling back to default data
                 runOnUiThread(() -> {
-                    clothingItems = getDefaultClothingItems();
-                    updatePreview();
+                    Toast.makeText(OutfitImageActivity.this,
+                            "Error loading clothing items", Toast.LENGTH_SHORT).show();
                 });
             }
         });
@@ -297,8 +297,6 @@ public class OutfitImageActivity extends BaseActivity {
             return new ArrayList<>(); // Return empty list on failure
         }
     }
-
-
 
     private void updatePreview() {
         // Check if we have at least one item selected
@@ -346,13 +344,7 @@ public class OutfitImageActivity extends BaseActivity {
 
                     // Fallback to placeholder if needed
                     if (!imageLoaded) {
-                        Integer imageResource = clothingItems.get(category) != null ?
-                                clothingItems.get(category).get(item) : null;
-                        if (imageResource != null) {
-                            itemPreview.setImageResource(imageResource);
-                        } else {
-                            itemPreview.setImageResource(R.drawable.ic_hanger);
-                        }
+                        itemPreview.setImageResource(R.drawable.ic_hanger);
                     }
 
                     // Add to preview container
@@ -368,31 +360,6 @@ public class OutfitImageActivity extends BaseActivity {
     private int dpToPx(int dp) {
         float density = getResources().getDisplayMetrics().density;
         return Math.round(dp * density);
-    }
-
-    // Default data in case the database is empty
-    private HashMap<String, HashMap<String, Integer>> getDefaultClothingItems() {
-        HashMap<String, HashMap<String, Integer>> clothingItems = new HashMap<>();
-
-        HashMap<String, Integer> tops = new HashMap<>();
-        tops.put("White T-Shirt", R.drawable.ic_hanger);
-        tops.put("Striped Shirt", R.drawable.ic_hanger);
-        tops.put("Hoodie", R.drawable.ic_hanger);
-        clothingItems.put("Tops", tops);
-
-        HashMap<String, Integer> bottoms = new HashMap<>();
-        bottoms.put("Black Pants", R.drawable.ic_hanger);
-        bottoms.put("Khaki Shorts", R.drawable.ic_hanger);
-        bottoms.put("Denim Skirt", R.drawable.ic_hanger);
-        clothingItems.put("Bottoms", bottoms);
-
-        HashMap<String, Integer> shoes = new HashMap<>();
-        shoes.put("Sneakers", R.drawable.ic_hanger);
-        shoes.put("Sandals", R.drawable.ic_hanger);
-        shoes.put("Boots", R.drawable.ic_hanger);
-        clothingItems.put("Shoes", shoes);
-
-        return clothingItems;
     }
 
     @Override
