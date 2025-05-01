@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageButton;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,13 +49,13 @@ public class WardrobeCategoryActivity extends BaseActivity {
         TextView title = findViewById(R.id.category_title);
         title.setText(category.toUpperCase());
 
-        ImageButton add = findViewById(R.id.add_button);
+        Button add = findViewById(R.id.add_button);
         setButtonClickListener(add, category);
 
         setupToolbar();
         configureBackButton(true);
 
-        applySystemBarInsets(R.id.create_outfit);
+        applySystemBarInsets(R.id.wardrobe_category);
 
         if (category.equals("Outfits")) {
             //add appropriate text to add button
@@ -73,7 +73,19 @@ public class WardrobeCategoryActivity extends BaseActivity {
 
     }
 
-    private void setButtonClickListener(ImageButton button, String category) {
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(category.equals("Outfits")) {
+            loadOutfitData();
+        } else {
+            loadClothingData(category);
+        }
+    }
+
+    private void setButtonClickListener(Button button, String category){
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -101,9 +113,6 @@ public class WardrobeCategoryActivity extends BaseActivity {
     }
 
     private void loadClothingData(String category) {
-        // Show loading indicator
-        Toast.makeText(this, "Loading clothing items...", Toast.LENGTH_SHORT).show();
-
         // Try to load from database in background thread
         Executors.newSingleThreadExecutor().execute(() -> {
             try {
@@ -119,6 +128,9 @@ public class WardrobeCategoryActivity extends BaseActivity {
                 Log.d(TAG, "Retrieved " + items.size() + " clothing items from database");
 
 
+                if(items.size() == 0){
+                    Toast.makeText(this, "No clothing items found", Toast.LENGTH_SHORT).show();
+                }
                 // Update UI on main thread
                 runOnUiThread(() -> {
                     clothingItems = items;
