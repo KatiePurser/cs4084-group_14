@@ -83,13 +83,14 @@ public class AddClothingItemActivity extends BaseActivity {
         addClothingItemViewModel = new ViewModelProvider(this).get(AddClothingItemViewModel.class);
         addClothingItemViewModel.getInsertClothingItemStatus().observe(this, insertClothingItemStatus -> {
             if (insertClothingItemStatus instanceof AddClothingItemViewModel.InsertClothingItemStatus.Success) {
+                Toast.makeText(this, "Clothing item added successfully!", Toast.LENGTH_SHORT).show();
                 long clothingItemId = ((AddClothingItemViewModel.InsertClothingItemStatus.Success) insertClothingItemStatus).itemId;
                 navigateToViewAndEditClothingItemActivity(clothingItemId);
             } else if (insertClothingItemStatus instanceof AddClothingItemViewModel.InsertClothingItemStatus.Error) {
                 String errorMessage = ((AddClothingItemViewModel.InsertClothingItemStatus.Error) insertClothingItemStatus).message;
                 Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
             } else if (insertClothingItemStatus instanceof AddClothingItemViewModel.InsertClothingItemStatus.Inserting) {
-                Toast.makeText(this, "Saving clothing item...", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "Saving clothing item...", Toast.LENGTH_SHORT).show();
             }
         });
 

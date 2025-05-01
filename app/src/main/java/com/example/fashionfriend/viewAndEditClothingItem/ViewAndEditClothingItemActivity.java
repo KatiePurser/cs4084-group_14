@@ -29,7 +29,6 @@ import com.bumptech.glide.Glide;
 import com.example.fashionfriend.BaseActivity;
 import com.example.fashionfriend.R;
 import com.example.fashionfriend.data.database.ClothingItem;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -138,13 +137,13 @@ public class ViewAndEditClothingItemActivity extends BaseActivity {
             });
             viewAndEditClothingItemViewModel.getUpdateClothingItemStatus().observe(this, updateClothingItemStatus -> {
                 if (updateClothingItemStatus instanceof ViewAndEditClothingItemViewModel.UpdateClothingItemStatus.Success) {
-                    Snackbar.make(findViewById(android.R.id.content), "Clothing item updated successfully!", Snackbar.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Clothing item updated successfully!", Toast.LENGTH_SHORT).show();
                     viewAndEditClothingItemViewModel.clearUpdateStatus();
                 } else if (updateClothingItemStatus instanceof ViewAndEditClothingItemViewModel.UpdateClothingItemStatus.Error) {
                     String errorMessage = ((ViewAndEditClothingItemViewModel.UpdateClothingItemStatus.Error) updateClothingItemStatus).message;
-                    Snackbar.make(findViewById(android.R.id.content), "Error updating item: " + errorMessage, Snackbar.LENGTH_LONG).show();
+                    Toast.makeText(this, "Error updating item: " + errorMessage, Toast.LENGTH_SHORT).show();
                 } else if (updateClothingItemStatus instanceof ViewAndEditClothingItemViewModel.UpdateClothingItemStatus.Updating) {
-                    Toast.makeText(this, "Saving changes...", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(this, "Saving changes...", Toast.LENGTH_SHORT).show();
                 }
             });
 
