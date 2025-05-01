@@ -157,10 +157,7 @@ public class WardrobeCategoryActivity extends BaseActivity {
         });
     }
 
-    private void loadOutfitData() {
-        // Show loading indicator
-        Toast.makeText(this, "Loading outfits...", Toast.LENGTH_SHORT).show();
-
+    private void loadOutfitData(){
         // Try to load from database in background thread
         Executors.newSingleThreadExecutor().execute(() -> {
             try {
@@ -175,6 +172,9 @@ public class WardrobeCategoryActivity extends BaseActivity {
                 List<Outfit> outfits = db.outfitDao().getAllOutfits();
                 Log.d(TAG, "Retrieved " + outfits.size() + " clothing items from database");
 
+                if(outfits.size() == 0){
+                    Toast.makeText(this, "No clothing items found", Toast.LENGTH_SHORT).show();
+                }
 
                 // Update UI on main thread
                 runOnUiThread(() -> {
