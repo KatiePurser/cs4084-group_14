@@ -59,12 +59,9 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
         super.onCreate(savedInstanceState);
-
-
         Window window = getWindow();
         window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimary));
         window.setNavigationBarColor(ContextCompat.getColor(this, R.color.colorPrimary));
-
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, 101);
@@ -73,13 +70,15 @@ public class MainActivity extends BaseActivity {
         createNotificationChannel();
         GalleryHelper.loadImagesToGallery(this);
 
+
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
         setupToolbar();
-        configureBackButton(false); // No back button
+        configureBackButton(false);
 
         reminderDao = FashionFriendDatabase.getDatabase(this).reminderDao();
+        addReminderForToday("Graduation!");
 
         checkForTodayReminder();
 
@@ -200,6 +199,28 @@ public class MainActivity extends BaseActivity {
             return;
         }
         notificationManager.notify(1, builder.build());
+    }
+
+    private void addReminderForToday(String text) {
+        Executors.newSingleThreadExecutor().execute(() -> {
+            Calendar today = Calendar.getInstance();
+            String todayDate = String.format(Locale.getDefault(), "%02d-%02d-%04d",
+                    today.get(Calendar.DAY_OF_MONTH),
+                    today.get(Calendar.MONTH) + 1,
+                    today.get(Calendar.YEAR));
+
+            // Prevent duplicates
+            String existingReminder = reminderDao.getReminderByDate(todayDate);
+            if (existingReminder == null) {
+                reminderDao.insert(new Reminder(todayDate, text));
+
+                runOnUiThread(() -> {
+                    addEventMarker(today);
+                    showTodayReminderNotification(text);
+                    Toast.makeText(this, "Today's reminder added: " + text, Toast.LENGTH_SHORT).show();
+                });
+            }
+        });
     }
 
     private void setButtonClickListener(ImageButton button) {
