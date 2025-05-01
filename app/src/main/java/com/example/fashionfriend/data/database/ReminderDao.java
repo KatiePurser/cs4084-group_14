@@ -21,12 +21,16 @@ public interface ReminderDao {
     List<Reminder> getAllReminders();
 
     @Query("SELECT * FROM reminders ORDER BY date")
-    Cursor getAllRemindersCursor(); // Optional if needed for legacy or adapters
+    Cursor getAllRemindersCursor();
 
     @Query("SELECT date FROM reminders ORDER BY date")
     List<String> getAllReminderDates();
 
     @Query("DELETE FROM reminders WHERE date = :date")
     void deleteReminder(String date);
+
+    @Query("SELECT * FROM reminders WHERE date = :date LIMIT 1")
+    Reminder getFullReminderByDate(String date);
+
 }
 

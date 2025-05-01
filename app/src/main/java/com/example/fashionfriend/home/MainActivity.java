@@ -136,7 +136,15 @@ public class MainActivity extends BaseActivity {
             String reminderText = reminderTitle.getText().toString().trim();
             if (!reminderText.isEmpty()) {
                 Executors.newSingleThreadExecutor().execute(() -> {
-                    reminderDao.insert(new Reminder(selectedDate, reminderText));
+                    Reminder existing = reminderDao.getFullReminderByDate(selectedDate);
+
+                    if (existing != null) {
+                        existing.reminder = reminderText;
+                        reminderDao.insert(existing);
+                    } else {
+                        reminderDao.insert(new Reminder(selectedDate, reminderText));
+                    }
+
                     runOnUiThread(() -> {
                         addEventMarker(date);
                         dialog.dismiss();
@@ -147,6 +155,7 @@ public class MainActivity extends BaseActivity {
                 Toast.makeText(this, "Please enter a reminder title", Toast.LENGTH_SHORT).show();
             }
         });
+
     }
 
     private void addEventMarker(Calendar date) {
