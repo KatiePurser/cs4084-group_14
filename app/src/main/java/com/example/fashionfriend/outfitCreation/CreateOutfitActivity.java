@@ -348,9 +348,7 @@ public class CreateOutfitActivity extends BaseActivity implements CategoryAdapte
     }
 
     private void loadClothingData() {
-        // Show loading indicator
-        Toast.makeText(this, "Loading clothing items...", Toast.LENGTH_SHORT).show();
-
+     
         // Try to load from database in background thread
         Executors.newSingleThreadExecutor().execute(() -> {
             try {

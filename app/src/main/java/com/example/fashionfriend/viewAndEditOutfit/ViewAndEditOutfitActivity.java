@@ -108,8 +108,6 @@ public class ViewAndEditOutfitActivity extends BaseActivity {
         // Verify all views are found
         if (outfitNameTextView == null || outfitNameEditText == null || outfitImageView == null ||
                 editOutfitButton == null || saveOutfitButton == null || cancelEditButton == null) {
-            Log.e(TAG, "Error: One or more views not found");
-            Toast.makeText(this, "Error initializing views", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -126,8 +124,6 @@ public class ViewAndEditOutfitActivity extends BaseActivity {
                             selectedImageUri = result.getData().getData();
                             Log.d(TAG, "Image selected: " + selectedImageUri);
                             if (selectedImageUri != null) {
-                                // Show loading indicator
-                                Toast.makeText(this, "Loading image...", Toast.LENGTH_SHORT).show();
 
                                 // Load image with Glide for better handling
                                 Glide.with(this)
@@ -150,7 +146,7 @@ public class ViewAndEditOutfitActivity extends BaseActivity {
 
         // Set up button listeners with explicit debugging
         editOutfitButton.setOnClickListener(v -> {
-            Log.d(TAG, "Edit outfit button clicked via listener");
+
             toggleEditMode(true);
         });
 
@@ -170,7 +166,7 @@ public class ViewAndEditOutfitActivity extends BaseActivity {
 
         // Get outfit ID from intent
         long outfitId = getIntent().getLongExtra("outfitId", -1);
-        Log.d(TAG, "Received outfit ID: " + outfitId);
+
         if (outfitId != -1) {
             loadOutfit(outfitId);
         } else {
@@ -479,9 +475,6 @@ public class ViewAndEditOutfitActivity extends BaseActivity {
             return;
         }
 
-        // Show loading indicator
-        Toast.makeText(this, "Saving changes...", Toast.LENGTH_SHORT).show();
-
         // Validate input
         String outfitName = outfitNameEditText.getText().toString().trim();
         if (outfitName.isEmpty()) {
@@ -496,13 +489,12 @@ public class ViewAndEditOutfitActivity extends BaseActivity {
         // Handle image if a new one was selected
         if (newImageSelected && selectedImageUri != null) {
             String previousImagePath = currentOutfit.getImagePath();
-            Log.d(TAG, "Saving new image to replace: " + previousImagePath);
 
             // Save new image
             String newImagePath = saveImageToInternalStorage(selectedImageUri);
             if (newImagePath != null) {
                 currentOutfit.setImagePath(newImagePath);
-                Log.d(TAG, "New image saved at: " + newImagePath);
+
 
                 // Delete old image if it exists
                 if (previousImagePath != null && !previousImagePath.isEmpty()) {

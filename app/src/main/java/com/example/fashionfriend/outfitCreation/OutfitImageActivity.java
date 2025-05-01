@@ -142,8 +142,7 @@ public class OutfitImageActivity extends BaseActivity {
     }
 
     private void saveOutfitWithImage() {
-        // Show loading indicator
-        Toast.makeText(this, "Saving outfit...", Toast.LENGTH_SHORT).show();
+
         saveButton.setEnabled(false);
 
         // Get outfit name
