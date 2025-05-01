@@ -29,7 +29,6 @@ import com.bumptech.glide.Glide;
 import com.example.fashionfriend.BaseActivity;
 import com.example.fashionfriend.R;
 import com.example.fashionfriend.data.database.ClothingItem;
-import com.example.fashionfriend.home.MainActivity;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.BufferedReader;
@@ -73,11 +72,7 @@ public class ViewAndEditClothingItemActivity extends BaseActivity {
         setContentView(R.layout.activity_view_and_edit_clothing_item);
 
         setupToolbar();
-        configureBackButton(true, () -> {
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            startActivity(intent);
-        });
+        configureBackButton(true);
 
         applySystemBarInsets(R.id.view_and_edit_clothing_item);
 
@@ -352,5 +347,10 @@ public class ViewAndEditClothingItemActivity extends BaseActivity {
             Log.e("ImageHelper", "Error copying image: " + e.getMessage());
             return null;
         }
+    }
+
+    @Override
+    protected boolean shouldRestartOnResume() {
+        return false;
     }
 }

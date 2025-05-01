@@ -27,7 +27,6 @@ import androidx.lifecycle.ViewModelProvider;
 import com.bumptech.glide.Glide;
 import com.example.fashionfriend.BaseActivity;
 import com.example.fashionfriend.R;
-import com.example.fashionfriend.home.MainActivity;
 import com.example.fashionfriend.viewAndEditClothingItem.ViewAndEditClothingItemActivity;
 import com.example.fashionfriend.data.database.ClothingItem;
 
@@ -75,11 +74,7 @@ public class AddClothingItemActivity extends BaseActivity {
         setContentView(R.layout.activity_add_clothing_item);
 
         setupToolbar();
-        configureBackButton(true, () -> {
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            startActivity(intent);
-        });
+        configureBackButton(true);
 
         applySystemBarInsets(R.id.add_clothing_item);
 
@@ -264,7 +259,6 @@ public class AddClothingItemActivity extends BaseActivity {
         }
     }
 
-
     private List<String> loadCategoriesFromCSV(String filename) {
         List<String> categories = new ArrayList<>();
         AssetManager assetManager = getAssets();
@@ -282,5 +276,10 @@ public class AddClothingItemActivity extends BaseActivity {
             Log.e("AddClothingItemActivity", "Error reading CSV: " + e.getMessage());
             return null; // Indicate failure
         }
+    }
+
+    @Override
+    protected boolean shouldRestartOnResume() {
+        return false;
     }
 }

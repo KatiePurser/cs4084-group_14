@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -19,18 +20,17 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
+
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.GridLayoutManager;
+
 
 import com.bumptech.glide.Glide;
 import com.example.fashionfriend.BaseActivity;
@@ -38,7 +38,6 @@ import com.example.fashionfriend.R;
 import com.example.fashionfriend.data.database.ClothingItem;
 import com.example.fashionfriend.data.database.FashionFriendDatabase;
 import com.example.fashionfriend.data.database.Outfit;
-import com.example.fashionfriend.home.MainActivity;
 import com.example.fashionfriend.outfitCreation.CreateOutfitActivity;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -49,12 +48,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -93,18 +89,7 @@ public class ViewAndEditOutfitActivity extends BaseActivity {
         setContentView(R.layout.activity_view_and_edit_outfit);
 
         setupToolbar();
-        // Configure back button with proper handling for edit mode
-        configureBackButton(true, () -> {
-            // Check if we're in edit mode first
-            if (outfitNameEditText.getVisibility() == View.VISIBLE) {
-                toggleEditMode(false); // Just cancel edit mode instead of going back
-            } else {
-                // Only navigate back if not in edit mode
-                Intent intent = new Intent(this, MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                startActivity(intent);
-            }
-        });
+        configureBackButton(true);
         // Initialize ViewModel
         viewModel = new ViewModelProvider(this).get(ViewAndEditOutfitViewModel.class);
 
@@ -645,5 +630,10 @@ public class ViewAndEditOutfitActivity extends BaseActivity {
             executorService.shutdown();
         }
     }
+    @Override
+    protected boolean shouldRestartOnResume() {
+        return false;
+    }
+
 }
 

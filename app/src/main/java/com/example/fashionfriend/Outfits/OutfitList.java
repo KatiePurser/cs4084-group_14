@@ -17,12 +17,13 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.fashionfriend.BaseActivity;
 import com.example.fashionfriend.R;
 import com.example.fashionfriend.data.database.Outfit;
 import com.example.fashionfriend.outfitCreation.CreateOutfitActivity;
 import com.example.fashionfriend.viewAndEditOutfit.ViewAndEditOutfitActivity;
 
-public class OutfitList extends AppCompatActivity implements OutfitAdapter.OnOutfitClickListener {
+public class OutfitList extends BaseActivity implements OutfitAdapter.OnOutfitClickListener {
 
     private static final String TAG = "OutfitListActivity";
     private static final int REQUEST_CREATE_OUTFIT = 1001;
@@ -39,6 +40,7 @@ public class OutfitList extends AppCompatActivity implements OutfitAdapter.OnOut
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_outfit_list);
+        configureBackButton(true);
 
         // Initialize ViewModel
         viewModel = new ViewModelProvider(this).get(com.example.fashionfriend.Outfits.OutfitListViewModel.class);
@@ -110,6 +112,20 @@ public class OutfitList extends AppCompatActivity implements OutfitAdapter.OnOut
                 loadOutfits();
                 Toast.makeText(this, "Outfit list updated", Toast.LENGTH_SHORT).show();
             }
+        }
+    }
+
+    // Handle back button press //
+    private boolean firstLaunch = true;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (firstLaunch) {
+            firstLaunch = false;
+        } else {
+            recreate();
         }
     }
 }

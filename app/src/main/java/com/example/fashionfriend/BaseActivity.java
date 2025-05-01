@@ -13,12 +13,12 @@ import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.core.view.WindowInsetsControllerCompat;
 
 import com.example.fashionfriend.addClothingItem.AddClothingItemActivity;
 import com.example.fashionfriend.home.MainActivity;
 import com.example.fashionfriend.outfitCreation.CreateOutfitActivity;
 import com.example.fashionfriend.wardrobe.WardrobeActivity;
+
 
 public abstract class BaseActivity extends AppCompatActivity {
 
@@ -28,7 +28,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setupSystemBarAppearance();
         setupToolbar();
     }
 
@@ -68,14 +67,12 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Call this in child activities to configure the back button behavior.
-     */
-    protected void configureBackButton(boolean showBackButton, Runnable backAction) {
+    protected void configureBackButton(boolean showBackButton) {
         if (backButton != null) {
             if (showBackButton) {
                 backButton.setVisibility(View.VISIBLE);
-                backButton.setOnClickListener(v -> backAction.run());
+                backButton.setOnClickListener(v -> this.getOnBackPressedDispatcher().onBackPressed());
+
             } else {
                 backButton.setVisibility(View.GONE);
             }
@@ -93,15 +90,26 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Sets dark system bar icons (black) for status and nav bars on light backgrounds.
-     */
-    protected void setupSystemBarAppearance() {
-        View decorView = getWindow().getDecorView();
-        WindowInsetsControllerCompat controller = ViewCompat.getWindowInsetsController(decorView);
-        if (controller != null) {
-            controller.setAppearanceLightStatusBars(true);     // dark icons on light background
-            controller.setAppearanceLightNavigationBars(true); // same for nav bar
+    private boolean firstLaunch = true;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (firstLaunch) {
+            firstLaunch = false;
+        } else if (shouldRestartOnResume()) {
+            restartActivity();
         }
+    }
+
+    protected boolean shouldRestartOnResume() {
+        return true;
+    }
+
+    protected void restartActivity() {
+        Intent intent = getIntent();
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        finish();
+        startActivity(intent);
     }
 }

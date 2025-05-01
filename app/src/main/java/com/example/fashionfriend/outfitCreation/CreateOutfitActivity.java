@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fashionfriend.BaseActivity;
-import com.example.fashionfriend.home.MainActivity;
 import com.example.fashionfriend.R;
 import com.example.fashionfriend.data.database.ClothingItem;
 import com.example.fashionfriend.data.database.FashionFriendDatabase;
@@ -60,12 +59,7 @@ public class CreateOutfitActivity extends BaseActivity implements CategoryAdapte
         setContentView(R.layout.activity_create_outfit);
 
         setupToolbar();
-        configureBackButton(true, () -> {
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            startActivity(intent);
-        });
-
+        configureBackButton(true);
         applySystemBarInsets(R.id.create_outfit);
 
         // Initialize views
@@ -112,13 +106,7 @@ public class CreateOutfitActivity extends BaseActivity implements CategoryAdapte
                 nextButton.setText("Save Changes");
             }
         }
-
-        // Hide the menu icon in toolbar since we're using the cancel button
-        ImageView menuIcon = findViewById(R.id.menu_icon);
-        if (menuIcon != null) {
-            menuIcon.setVisibility(View.GONE);
-        }
-
+        
         loadClothingData();  // Load data from database
 
         // Next Button Listener
@@ -449,6 +437,4 @@ public class CreateOutfitActivity extends BaseActivity implements CategoryAdapte
             return new ArrayList<>(); // Return empty list on failure
         }
     }
-
-
 }

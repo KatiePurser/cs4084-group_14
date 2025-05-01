@@ -14,19 +14,23 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FashionFriend"
         tools:targetApi="31">
+
         <activity
             android:name=".Outfits.OutfitList"
-            android:exported="false"
-            android:theme="@style/Theme.FashionFriend" />
+            android:exported="false"/>
+
         <activity
             android:name=".viewAndEditOutfit.ViewAndEditOutfitActivity"
-            android:exported="false" />
+            android:exported="false"/>
+
         <activity
             android:name=".outfitCreation.OutfitImageActivity"
-            android:exported="false" />
+            android:exported="false"/>
+
         <activity
             android:name=".outfitCreation.CreateOutfitActivity"
-            android:exported="false" />
+            android:exported="false"/>
+
         <activity
             android:name=".home.MainActivity"
             android:exported="true"
@@ -37,20 +41,23 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".addClothingItem.AddClothingItemActivity"
-            android:exported="false" />
+            android:exported="false"/>
+
         <activity
             android:name=".viewAndEditClothingItem.ViewAndEditClothingItemActivity"
-            android:exported="false" />
+            android:exported="false"/>
+
         <activity
             android:name=".wardrobe.WardrobeActivity"
-            android:exported="false">
-        </activity>
+            android:exported="false"/>
+
         <activity
             android:name=".wardrobe.WardrobeCategoryActivity"
-            android:exported="false">
-        </activity>
+            android:exported="false"/>
+
     </application>
 
 

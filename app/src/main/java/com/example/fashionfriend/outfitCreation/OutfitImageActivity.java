@@ -77,19 +77,15 @@ public class OutfitImageActivity extends BaseActivity {
                     }
             );
 
-@Override
-protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_outfit_image);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_outfit_image);
 
-    setupToolbar();
-    configureBackButton(true, () -> {
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        startActivity(intent);
-    });
+        setupToolbar();
+        configureBackButton(true);
 
-    applySystemBarInsets(R.id.outfit_image);
+        applySystemBarInsets(R.id.outfit_image);
 
         // Get outfit data from intent
         itemsJson = getIntent().getStringExtra("OUTFIT_ITEMS_JSON");
@@ -397,5 +393,10 @@ protected void onCreate(Bundle savedInstanceState) {
         clothingItems.put("Shoes", shoes);
 
         return clothingItems;
+    }
+
+    @Override
+    protected boolean shouldRestartOnResume() {
+        return false;
     }
 }
