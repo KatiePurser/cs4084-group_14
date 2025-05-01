@@ -47,7 +47,7 @@ public class WardrobeCategoryActivity extends BaseActivity {
         category = i.getStringExtra("type");
 
         TextView title = findViewById(R.id.category_title);
-        title.setText(category.toUpperCase());
+        title.setText(category);
 
         Button add = findViewById(R.id.add_button);
         setButtonClickListener(add, category);
@@ -63,10 +63,28 @@ public class WardrobeCategoryActivity extends BaseActivity {
             add_text.setText("Add New Outfit");
             //retrieve outfits from the DB
             loadOutfitData();
-        } else {
+        } else if (category.equals("Tops")){
             //add appropriate text to add button
             TextView add_text = findViewById(R.id.add_button_text);
-            add_text.setText("Add New Clothing Item");
+            add_text.setText("Add New Top");
+            //retrieve all clothing items in the category from the DB
+            loadClothingData(category);
+        } else if (category.equals("Bottom")){
+            //add appropriate text to add button
+            TextView add_text = findViewById(R.id.add_button_text);
+            add_text.setText("Add New Bottom");
+            //retrieve all clothing items in the category from the DB
+            loadClothingData(category);
+        } else if (category.equals("Shoes")){
+            //add appropriate text to add button
+            TextView add_text = findViewById(R.id.add_button_text);
+            add_text.setText("Add New Shoes");
+            //retrieve all clothing items in the category from the DB
+            loadClothingData(category);
+        } else if (category.equals("Accessories")){
+            //add appropriate text to add button
+            TextView add_text = findViewById(R.id.add_button_text);
+            add_text.setText("Add New Accessory");
             //retrieve all clothing items in the category from the DB
             loadClothingData(category);
         }
