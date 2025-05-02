@@ -103,7 +103,8 @@ The project was designed and implemented by the following team members:
 
 ### Gallery Images
 
-Sample images are programmatically loaded into the emulator's gallery to simulate user photo content. These can be used when selecting outfit images within the app.
+Sample images are programmatically loaded into the emulator's gallery to simulate user photo content. These can be used when selecting images within the app.  
+**Note:** Images may take a few seconds to appear due to Android's media indexing process. This is expected behavior.
 
 ### Reminder Scheduling
 
