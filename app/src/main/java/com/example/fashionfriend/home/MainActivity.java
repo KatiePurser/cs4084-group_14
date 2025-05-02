@@ -226,7 +226,6 @@ public class MainActivity extends BaseActivity {
                 runOnUiThread(() -> {
                     addEventMarker(today);
                     showTodayReminderNotification(text);
-                    Toast.makeText(this, "Today's reminder added: " + text, Toast.LENGTH_SHORT).show();
                 });
             }
         });
