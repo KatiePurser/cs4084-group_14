@@ -105,6 +105,7 @@ The project was designed and implemented by the following team members:
 
 Sample images are programmatically loaded into the emulator's gallery to simulate user photo content. These can be used when selecting images within the app.  
 **Note:** Images may take a few seconds to appear due to Android's media indexing process. This is expected behavior.
+**Note:** If images do not load in the select photo view at first, click out of the view and back in.
 
 ### Reminder Scheduling
 
