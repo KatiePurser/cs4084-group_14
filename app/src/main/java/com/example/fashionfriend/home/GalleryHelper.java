@@ -3,6 +3,7 @@ package com.example.fashionfriend.home;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -80,11 +81,22 @@ public class GalleryHelper {
                 values.clear();
                 values.put(MediaStore.Images.Media.IS_PENDING, 0);
                 resolver.update(uri, values, null, null);
+
+                // Trigger media scanner to index the file
+                scanMediaFile(context, uri);
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
+
+    private static void scanMediaFile(Context context, Uri uri) {
+        Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        scanIntent.setData(uri);
+        context.sendBroadcast(scanIntent);
+    }
+
 
     private static void copyImagesFromAssetsToInternalStorage(Context context) {
         String[] imageNames;
